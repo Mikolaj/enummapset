@@ -9,7 +9,7 @@ bug-reports:    https://github.com/michalt/enummapset/issues
 license:        BSD3
 license-file:   LICENSE
 author:         Michal Terepeta
-maintainer:     michal.terepeta@gmail.com
+maintainer:     Michal Terepeta <michal.terepeta@gmail.com>
 copyright:      (c) 2011 Michal Terepeta
 
 category:       Data
