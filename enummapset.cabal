@@ -1,0 +1,29 @@
+name:           enummapset
+version:        0.0.1
+synopsis:       IntMap and IntSet with Enum keys/elements.
+description:    This package contains simple wrappers around 'Data.IntMap' and
+                'Data.IntSet' with 'Enum' keys and elements respectively.
+                Especially useful for 'Int's wrapped with newtype.
+homepage:       https://github.com/michalt/enummapset
+bug-reports:    https://github.com/michalt/enummapset/issues
+license:        BSD3
+license-file:   LICENSE
+author:         Michal Terepeta
+maintainer:     michal.terepeta@gmail.com
+copyright:      (c) 2011 Michal Terepeta
+
+category:       Data
+build-type:     Simple
+
+cabal-version:  >=1.2
+
+Library
+  exposed-modules:
+    Data.EnumMap
+    Data.EnumSet
+
+  build-depends:
+    base < 4.4,
+    containers >= 0.3 && < 0.5
+
+  ghc-options: -Wall
