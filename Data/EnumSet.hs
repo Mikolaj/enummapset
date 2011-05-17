@@ -12,7 +12,7 @@
 -- This is a simple wrapper for 'Data.IntSet' that allows storing any elements
 -- of Enum type class. Useful if one wants to have the performance of
 -- 'Data.IntSet' and at the same time use something else than 'Int's (e.g. an
--- 'Int' wrapped with newtype). For documentation see the one for 'Data.IntMap'.
+-- 'Int' wrapped with newtype). For documentation see the one for 'Data.IntSet'.
 
 module Data.EnumSet
   ( EnumSet
