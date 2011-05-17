@@ -17,6 +17,10 @@
 module Data.EnumSet
   ( EnumSet
 
+  -- * Wrapping/unwrapping
+  , intSetToEnumSet
+  , enumSetToIntSet
+
   -- * Operators
   , (\\)
 
@@ -98,6 +102,18 @@ instance (Enum e, Read e) => Read (EnumSet e) where
     Ident "fromList" <- lexP
     list <- readPrec
     return (fromList list)
+
+--
+-- Conversion to/from 'IntSet'.
+--
+
+-- | Wrap 'IntSet'.
+intSetToEnumSet :: IntSet -> EnumSet e
+intSetToEnumSet = EnumSet
+
+-- | Unwrap 'IntSet'.
+enumSetToIntSet :: EnumSet e -> IntSet
+enumSetToIntSet = unWrap
 
 --
 -- A few useful functions used through the module; not exported.

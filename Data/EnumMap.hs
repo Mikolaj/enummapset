@@ -18,6 +18,10 @@
 module Data.EnumMap
   ( EnumMap
 
+  -- * Wrapping/unwrapping
+  , intMapToEnumMap
+  , enumMapToIntMap
+
   -- * Operators
   , (!)
   , (\\)
@@ -164,6 +168,18 @@ instance (Enum k, Read k, Read a) => Read (EnumMap k a) where
     Ident "fromList" <- lexP
     list <- readPrec
     return (fromList list)
+
+--
+-- Conversion to/from 'IntMap'.
+--
+
+-- | Wrap 'IntMap'.
+intMapToEnumMap :: IntMap a -> EnumMap k a
+intMapToEnumMap = EnumMap
+
+-- | Unwrap 'IntMap'.
+enumMapToIntMap :: EnumMap k a -> IntMap a
+enumMapToIntMap = unWrap
 
 --
 -- A few useful functions used through the module. Not exported.
