@@ -27,7 +27,7 @@ Library
     Data.EnumSet
 
   build-depends:
-    base < 4.4,
+    base < 5,
     containers >= 0.3 && < 0.5
 
   ghc-options: -Wall
