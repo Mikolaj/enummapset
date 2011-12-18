@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 -- |
@@ -86,12 +87,13 @@ import Data.IntSet ( IntSet )
 import qualified Data.IntSet as I
 
 import Data.Monoid ( Monoid )
+import Data.Typeable ( Typeable )
 
 import Text.Read
 
 -- | Wrapper for 'IntSet' with 'Enum' elements.
 newtype EnumSet e = EnumSet { unWrap :: IntSet }
-  deriving (Eq, Monoid, Ord)
+  deriving (Eq, Monoid, Ord, Typeable)
 
 instance (Enum e, Show e) => Show (EnumSet e) where
   showsPrec p es = showParen (p > 10) $

@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 -- |
@@ -152,12 +153,13 @@ import qualified Data.EnumSet as EnumSet
 import Data.Foldable ( Foldable )
 import Data.Monoid ( Monoid )
 import Data.Traversable ( Traversable )
+import Data.Typeable ( Typeable )
 
 import Text.Read
 
 -- | Wrapper for 'IntMap' with 'Enum' keys.
 newtype EnumMap k a = EnumMap { unWrap :: IntMap a }
-  deriving (Eq, Foldable, Functor, Ord, Monoid, Traversable)
+  deriving (Eq, Foldable, Functor, Ord, Monoid, Traversable, Typeable)
 
 instance (Enum k, Show k, Show a) => Show (EnumMap k a) where
   showsPrec p em = showParen (p > 10) $
