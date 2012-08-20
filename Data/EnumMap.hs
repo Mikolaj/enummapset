@@ -73,6 +73,9 @@ module Data.EnumMap
   , intersectionWith
   , intersectionWithKey
 
+  -- ** Universal combining function
+  , mergeWithKey
+
   -- * Traversal
   -- ** Map
   , map
@@ -334,6 +337,13 @@ intersectionWith f (EnumMap im1) (EnumMap im2) = EnumMap $ I.intersectionWith f 
 intersectionWithKey :: (Enum k) => (k -> a -> b -> c) -> EnumMap k a -> EnumMap k b -> EnumMap k c
 intersectionWithKey f (EnumMap im1) (EnumMap im2) = EnumMap $ I.intersectionWithKey (f . toEnum) im1 im2
 {-# INLINE intersectionWithKey #-}
+
+mergeWithKey :: (Enum k) => (k -> a -> b -> Maybe c) ->
+    (EnumMap k a -> EnumMap k c) -> (EnumMap k b -> EnumMap k c) ->
+    EnumMap k a -> EnumMap k b -> EnumMap k c
+mergeWithKey f ga gb = \ ma mb -> EnumMap $
+    I.mergeWithKey (f . toEnum) (unWrap . ga . EnumMap) (unWrap . gb . EnumMap) (unWrap ma) (unWrap mb)
+{-# INLINE mergeWithKey #-}
 
 updateMinWithKey :: (Enum k) => (k -> a -> a) -> EnumMap k a -> EnumMap k a
 updateMinWithKey f = EnumMap . I.updateMinWithKey (f . toEnum) . unWrap
