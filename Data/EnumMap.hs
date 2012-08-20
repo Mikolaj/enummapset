@@ -153,6 +153,7 @@ import qualified Data.IntMap as I
 import Data.EnumSet ( EnumSet )
 import qualified Data.EnumSet as EnumSet
 
+import Control.Arrow ( first )
 import Data.Foldable ( Foldable )
 import Data.Monoid ( Monoid )
 import Data.Traversable ( Traversable )
@@ -345,11 +346,11 @@ mergeWithKey f ga gb = \ ma mb -> EnumMap $
     I.mergeWithKey (f . toEnum) (unWrap . ga . EnumMap) (unWrap . gb . EnumMap) (unWrap ma) (unWrap mb)
 {-# INLINE mergeWithKey #-}
 
-updateMinWithKey :: (Enum k) => (k -> a -> a) -> EnumMap k a -> EnumMap k a
+updateMinWithKey :: (Enum k) => (k -> a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMinWithKey f = EnumMap . I.updateMinWithKey (f . toEnum) . unWrap
 {-# INLINE updateMinWithKey #-}
 
-updateMaxWithKey :: (Enum k) => (k -> a -> a) -> EnumMap k a -> EnumMap k a
+updateMaxWithKey :: (Enum k) => (k -> a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMaxWithKey f = EnumMap . I.updateMaxWithKey (f . toEnum) . unWrap
 {-# INLINE updateMaxWithKey #-}
 
@@ -365,11 +366,11 @@ minViewWithKey =  fmap wrap . I.minViewWithKey . unWrap
     wrap ((i, a), imap) = ((toEnum i, a), EnumMap imap)
 {-# INLINE minViewWithKey #-}
 
-updateMax :: (a -> a) -> EnumMap k a -> EnumMap k a
+updateMax :: (a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMax f = EnumMap . I.updateMax f . unWrap
 {-# INLINE updateMax #-}
 
-updateMin :: (a -> a) -> EnumMap k a -> EnumMap k a
+updateMin :: (a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMin f = EnumMap . I.updateMin f . unWrap
 {-# INLINE updateMin #-}
 
@@ -381,12 +382,12 @@ minView :: EnumMap k a -> Maybe (a, EnumMap k a)
 minView = fmap sndWrap . I.minView . unWrap
 {-# INLINE minView #-}
 
-deleteFindMax :: EnumMap k a -> (a, EnumMap k a)
-deleteFindMax = sndWrap . I.deleteFindMax . unWrap
+deleteFindMax :: (Enum k) => EnumMap k a -> ((k, a), EnumMap k a)
+deleteFindMax = first fstToEnum . sndWrap . I.deleteFindMax . unWrap
 {-# INLINE deleteFindMax #-}
 
-deleteFindMin :: EnumMap k a -> (a, EnumMap k a)
-deleteFindMin = sndWrap . I.deleteFindMin . unWrap
+deleteFindMin :: (Enum k) => EnumMap k a -> ((k, a), EnumMap k a)
+deleteFindMin = first fstToEnum . sndWrap . I.deleteFindMin . unWrap
 {-# INLINE deleteFindMin #-}
 
 findMin :: (Enum k) => EnumMap k a -> (k, a)
