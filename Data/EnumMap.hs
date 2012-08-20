@@ -153,7 +153,7 @@ import qualified Data.IntMap as I
 import Data.EnumSet ( EnumSet )
 import qualified Data.EnumSet as EnumSet
 
-import Control.Arrow ( first )
+import Control.Arrow ( first, second, (***) )
 import Data.Foldable ( Foldable )
 import Data.Monoid ( Monoid )
 import Data.Traversable ( Traversable )
@@ -191,20 +191,8 @@ enumMapToIntMap = unWrap
 -- A few useful functions used through the module. Not exported.
 --
 
-fstToEnum :: (Enum k) => (Int, a) -> (k, a)
-fstToEnum (i, a) = (toEnum i, a)
-{-# INLINE fstToEnum #-}
-
-fstFromEnum :: (Enum k) => (k, a) -> (Int, a)
-fstFromEnum (i, a) = (fromEnum i, a)
-{-# INLINE fstFromEnum #-}
-
-sndWrap :: (a, IntMap b) -> (a, EnumMap k b)
-sndWrap (a, im) = (a, EnumMap im)
-{-# INLINE sndWrap #-}
-
 pairWrap :: (IntMap a, IntMap b) -> (EnumMap k a, EnumMap k b)
-pairWrap (im1, im2) = (EnumMap im1, EnumMap im2)
+pairWrap = EnumMap *** EnumMap
 {-# INLINE pairWrap #-}
 
 --
@@ -264,7 +252,7 @@ insertWithKey f k a = EnumMap . I.insertWithKey (f . toEnum) (fromEnum k) a . un
 {-# INLINE insertWithKey #-}
 
 insertLookupWithKey :: (Enum k) => (k -> a -> a -> a) -> k -> a -> EnumMap k a -> (Maybe a, EnumMap k a)
-insertLookupWithKey f k a = sndWrap . I.insertLookupWithKey (f . toEnum) (fromEnum k) a . unWrap
+insertLookupWithKey f k a = second EnumMap . I.insertLookupWithKey (f . toEnum) (fromEnum k) a . unWrap
 {-# INLINE insertLookupWithKey #-}
 
 delete :: (Enum k) => k -> EnumMap k a -> EnumMap k a
@@ -288,7 +276,7 @@ updateWithKey f k = EnumMap . I.updateWithKey (f . toEnum) (fromEnum k) . unWrap
 {-# INLINE updateWithKey #-}
 
 updateLookupWithKey ::  (Enum k) => (k -> a -> Maybe a) -> k -> EnumMap k a -> (Maybe a,EnumMap k a)
-updateLookupWithKey f k = sndWrap . I.updateLookupWithKey (f . toEnum) (fromEnum k) . unWrap
+updateLookupWithKey f k = second EnumMap . I.updateLookupWithKey (f . toEnum) (fromEnum k) . unWrap
 {-# INLINE updateLookupWithKey #-}
 
 alter :: (Enum k) => (Maybe a -> Maybe a) -> k -> EnumMap k a -> EnumMap k a
@@ -375,27 +363,27 @@ updateMin f = EnumMap . I.updateMin f . unWrap
 {-# INLINE updateMin #-}
 
 maxView :: EnumMap k a -> Maybe (a, EnumMap k a)
-maxView = fmap sndWrap . I.maxView . unWrap
+maxView = fmap (second EnumMap) . I.maxView . unWrap
 {-# INLINE maxView #-}
 
 minView :: EnumMap k a -> Maybe (a, EnumMap k a)
-minView = fmap sndWrap . I.minView . unWrap
+minView = fmap (second EnumMap) . I.minView . unWrap
 {-# INLINE minView #-}
 
 deleteFindMax :: (Enum k) => EnumMap k a -> ((k, a), EnumMap k a)
-deleteFindMax = first fstToEnum . sndWrap . I.deleteFindMax . unWrap
+deleteFindMax = (first toEnum *** EnumMap) . I.deleteFindMax . unWrap
 {-# INLINE deleteFindMax #-}
 
 deleteFindMin :: (Enum k) => EnumMap k a -> ((k, a), EnumMap k a)
-deleteFindMin = first fstToEnum . sndWrap . I.deleteFindMin . unWrap
+deleteFindMin = (first toEnum *** EnumMap) . I.deleteFindMin . unWrap
 {-# INLINE deleteFindMin #-}
 
 findMin :: (Enum k) => EnumMap k a -> (k, a)
-findMin = fstToEnum . I.findMin . unWrap
+findMin = first toEnum . I.findMin . unWrap
 {-# INLINE findMin #-}
 
 findMax :: (Enum k) => EnumMap k a -> (k, a)
-findMax = fstToEnum . I.findMax . unWrap
+findMax = first toEnum . I.findMax . unWrap
 {-# INLINE findMax #-}
 
 deleteMin :: EnumMap k a -> EnumMap k a
@@ -431,15 +419,15 @@ mapWithKey f = EnumMap . I.mapWithKey (f . toEnum) . unWrap
 {-# INLINE mapWithKey #-}
 
 mapAccum :: (a -> b -> (a, c)) -> a -> EnumMap k b -> (a, EnumMap k c)
-mapAccum f a = sndWrap . I.mapAccum f a . unWrap
+mapAccum f a = second EnumMap . I.mapAccum f a . unWrap
 {-# INLINE mapAccum #-}
 
 mapAccumWithKey :: (Enum k) => (a -> k -> b -> (a, c)) -> a -> EnumMap k b -> (a, EnumMap k c)
-mapAccumWithKey f a = sndWrap . I.mapAccumWithKey (\b -> f b . toEnum) a . unWrap
+mapAccumWithKey f a = second EnumMap . I.mapAccumWithKey (\b -> f b . toEnum) a . unWrap
 {-# INLINE mapAccumWithKey #-}
 
 mapAccumRWithKey :: (Enum k) => (a -> k -> b -> (a, c)) -> a -> EnumMap k b -> (a, EnumMap k c)
-mapAccumRWithKey f a = sndWrap . I.mapAccumRWithKey (\b -> f b . toEnum) a . unWrap
+mapAccumRWithKey f a = second EnumMap . I.mapAccumRWithKey (\b -> f b . toEnum) a . unWrap
 {-# INLINE mapAccumRWithKey #-}
 
 filter :: (a -> Bool) -> EnumMap k a -> EnumMap k a
@@ -505,41 +493,41 @@ keysSet = EnumSet.fromDistinctAscList . keys
 {-# INLINE keysSet #-}
 
 assocs :: (Enum k) => EnumMap k a -> [(k, a)]
-assocs = P.map fstToEnum . I.assocs . unWrap
+assocs = P.map (first toEnum) . I.assocs . unWrap
 {-# INLINE assocs #-}
 
 toList :: (Enum k) => EnumMap k a -> [(k, a)]
-toList = P.map fstToEnum . I.toList . unWrap
+toList = P.map (first toEnum) . I.toList . unWrap
 {-# INLINE toList #-}
 
 toAscList :: (Enum k) => EnumMap k a -> [(k, a)]
-toAscList = P.map fstToEnum . I.toAscList . unWrap
+toAscList = P.map (first toEnum) . I.toAscList . unWrap
 {-# INLINE toAscList #-}
 
 fromList :: (Enum k) => [(k, a)] -> EnumMap k a
-fromList = EnumMap . I.fromList . P.map fstFromEnum
+fromList = EnumMap . I.fromList . P.map (first fromEnum)
 {-# INLINE fromList #-}
 
 fromListWith :: (Enum k) => (a -> a -> a) -> [(k, a)] -> EnumMap k a
-fromListWith f = EnumMap . I.fromListWith f . P.map fstFromEnum
+fromListWith f = EnumMap . I.fromListWith f . P.map (first fromEnum)
 {-# INLINE fromListWith #-}
 
 fromListWithKey :: (Enum k) => (k -> a -> a -> a) -> [(k, a)] -> EnumMap k a
-fromListWithKey f = EnumMap . I.fromListWithKey (f . toEnum) . P.map fstFromEnum
+fromListWithKey f = EnumMap . I.fromListWithKey (f . toEnum) . P.map (first fromEnum)
 {-# INLINE fromListWithKey #-}
 
 fromAscList :: (Enum k) => [(k, a)] -> EnumMap k a
-fromAscList = EnumMap . I.fromAscList . P.map fstFromEnum
+fromAscList = EnumMap . I.fromAscList . P.map (first fromEnum)
 {-# INLINE fromAscList #-}
 
 fromAscListWith :: (Enum k) => (a -> a -> a) -> [(k, a)] -> EnumMap k a
-fromAscListWith f = EnumMap . I.fromAscListWith f . P.map fstFromEnum
+fromAscListWith f = EnumMap . I.fromAscListWith f . P.map (first fromEnum)
 {-# INLINE fromAscListWith #-}
 
 fromAscListWithKey :: (Enum k) => (k -> a -> a -> a) -> [(k, a)] -> EnumMap k a
-fromAscListWithKey f = EnumMap . I.fromAscListWithKey (f . toEnum) . P.map fstFromEnum
+fromAscListWithKey f = EnumMap . I.fromAscListWithKey (f . toEnum) . P.map (first fromEnum)
 {-# INLINE fromAscListWithKey #-}
 
 fromDistinctAscList :: (Enum k) => [(k, a)] -> EnumMap k a
-fromDistinctAscList = EnumMap . I.fromDistinctAscList . P.map fstFromEnum
+fromDistinctAscList = EnumMap . I.fromDistinctAscList . P.map (first fromEnum)
 {-# INLINE fromDistinctAscList #-}
