@@ -335,11 +335,11 @@ intersectionWithKey :: (Enum k) => (k -> a -> b -> c) -> EnumMap k a -> EnumMap 
 intersectionWithKey f (EnumMap im1) (EnumMap im2) = EnumMap $ I.intersectionWithKey (f . toEnum) im1 im2
 {-# INLINE intersectionWithKey #-}
 
-updateMinWithKey :: (Enum k) => (k -> a -> a) -> EnumMap k a -> EnumMap k a
+updateMinWithKey :: (Enum k) => (k -> a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMinWithKey f = EnumMap . I.updateMinWithKey (f . toEnum) . unWrap
 {-# INLINE updateMinWithKey #-}
 
-updateMaxWithKey :: (Enum k) => (k -> a -> a) -> EnumMap k a -> EnumMap k a
+updateMaxWithKey :: (Enum k) => (k -> a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMaxWithKey f = EnumMap . I.updateMaxWithKey (f . toEnum) . unWrap
 {-# INLINE updateMaxWithKey #-}
 
@@ -355,11 +355,11 @@ minViewWithKey =  fmap wrap . I.minViewWithKey . unWrap
     wrap ((i, a), imap) = ((toEnum i, a), EnumMap imap)
 {-# INLINE minViewWithKey #-}
 
-updateMax :: (a -> a) -> EnumMap k a -> EnumMap k a
+updateMax :: (a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMax f = EnumMap . I.updateMax f . unWrap
 {-# INLINE updateMax #-}
 
-updateMin :: (a -> a) -> EnumMap k a -> EnumMap k a
+updateMin :: (a -> Maybe a) -> EnumMap k a -> EnumMap k a
 updateMin f = EnumMap . I.updateMin f . unWrap
 {-# INLINE updateMin #-}
 
@@ -371,12 +371,16 @@ minView :: EnumMap k a -> Maybe (a, EnumMap k a)
 minView = fmap sndWrap . I.minView . unWrap
 {-# INLINE minView #-}
 
-deleteFindMax :: EnumMap k a -> (a, EnumMap k a)
-deleteFindMax = sndWrap . I.deleteFindMax . unWrap
+deleteFindMax :: (Enum k) => EnumMap k a -> ((k, a), EnumMap k a)
+deleteFindMax = wrap . I.deleteFindMax . unWrap
+  where
+    wrap ((i,a), imap) = ((toEnum i, a), EnumMap imap)
 {-# INLINE deleteFindMax #-}
 
-deleteFindMin :: EnumMap k a -> (a, EnumMap k a)
-deleteFindMin = sndWrap . I.deleteFindMin . unWrap
+deleteFindMin :: (Enum k) => EnumMap k a -> ((k, a), EnumMap k a)
+deleteFindMin = wrap . I.deleteFindMin . unWrap
+  where
+    wrap ((i,a), imap) = ((toEnum i, a), EnumMap imap)
 {-# INLINE deleteFindMin #-}
 
 findMin :: (Enum k) => EnumMap k a -> (k, a)
