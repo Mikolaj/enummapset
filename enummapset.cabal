@@ -28,6 +28,7 @@ Library
 
   build-depends:
     base < 5,
-    containers >= 0.5 && < 0.6
+    containers >= 0.5 && < 0.6,
+    deepseq >= 1.2 && < 1.4
 
   ghc-options: -Wall
