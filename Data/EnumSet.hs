@@ -86,6 +86,7 @@ import qualified Prelude as P
 import Data.IntSet ( IntSet )
 import qualified Data.IntSet as I
 
+import Control.DeepSeq ( NFData )
 import Data.Monoid ( Monoid )
 import Data.Typeable ( Typeable )
 
@@ -93,7 +94,7 @@ import Text.Read
 
 -- | Wrapper for 'IntSet' with 'Enum' elements.
 newtype EnumSet e = EnumSet { unWrap :: IntSet }
-  deriving (Eq, Monoid, Ord, Typeable)
+  deriving (Eq, Monoid, Ord, Typeable, NFData)
 
 instance (Enum e, Show e) => Show (EnumSet e) where
   showsPrec p es = showParen (p > 10) $
