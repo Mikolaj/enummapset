@@ -106,14 +106,14 @@ import Data.Typeable ( Typeable )
 import Text.Read
 
 -- | Wrapper for 'IntSet' with 'Enum' elements.
-newtype EnumSet e = EnumSet { unWrap :: IntSet }
+newtype EnumSet k = EnumSet { unWrap :: IntSet }
   deriving (Eq, Monoid, Ord, Typeable, NFData)
 
-instance (Enum e, Show e) => Show (EnumSet e) where
-  showsPrec p es = showParen (p > 10) $
-    showString "fromList " . shows (toList es)
+instance (Enum k, Show k) => Show (EnumSet k) where
+  showsPrec p ks = showParen (p > 10) $
+    showString "fromList " . shows (toList ks)
 
-instance (Enum e, Read e) => Read (EnumSet e) where
+instance (Enum k, Read k) => Read (EnumSet k) where
   readPrec = parens . prec 10 $ do
     Ident "fromList" <- lexP
     list <- readPrec
@@ -124,22 +124,22 @@ instance (Enum e, Read e) => Read (EnumSet e) where
 --
 
 -- | Wrap 'IntSet'.
-intSetToEnumSet :: IntSet -> EnumSet e
+intSetToEnumSet :: IntSet -> EnumSet k
 intSetToEnumSet = EnumSet
 
 -- | Unwrap 'IntSet'.
-enumSetToIntSet :: EnumSet e -> IntSet
+enumSetToIntSet :: EnumSet k -> IntSet
 enumSetToIntSet = unWrap
 
 --
 -- A few useful functions used through the module; not exported.
 --
 
-pairWrap :: (IntSet, IntSet) -> (EnumSet e, EnumSet e)
+pairWrap :: (IntSet, IntSet) -> (EnumSet k, EnumSet k)
 pairWrap (is1, is2) = (EnumSet is1, EnumSet is2)
 {-# INLINE pairWrap #-}
 
-toEnumWrap :: (Enum e) => (Int, IntSet) -> (e, EnumSet e)
+toEnumWrap :: (Enum k) => (Int, IntSet) -> (k, EnumSet k)
 toEnumWrap (i, is) = (toEnum i, EnumSet is)
 {-# INLINE toEnumWrap #-}
 
@@ -147,180 +147,180 @@ toEnumWrap (i, is) = (toEnum i, EnumSet is)
 -- Here begins the main part.
 --
 
-(\\) :: EnumSet e -> EnumSet e -> EnumSet e
+(\\) :: EnumSet k -> EnumSet k -> EnumSet k
 (EnumSet is1) \\ (EnumSet is2) = EnumSet $ is1 I.\\ is2
 {-# INLINE (\\) #-}
 
-null :: EnumSet e -> Bool
+null :: EnumSet k -> Bool
 null = I.null . unWrap
 {-# INLINE null #-}
 
-size :: EnumSet e -> Int
+size :: EnumSet k -> Int
 size = I.size . unWrap
 {-# INLINE size #-}
 
-member :: (Enum e) => e -> EnumSet e -> Bool
-member e = I.member (fromEnum e) . unWrap
+member :: (Enum k) => k -> EnumSet k -> Bool
+member k = I.member (fromEnum k) . unWrap
 {-# INLINE member #-}
 
-notMember :: (Enum e) => e -> EnumSet e -> Bool
-notMember e = I.notMember (fromEnum e) . unWrap
+notMember :: (Enum k) => k -> EnumSet k -> Bool
+notMember k = I.notMember (fromEnum k) . unWrap
 {-# INLINE notMember #-}
 
-lookupLT :: (Enum e) => e -> EnumSet e -> Maybe e
-lookupLT e = fmap toEnum . I.lookupLT (fromEnum e) . unWrap
+lookupLT :: (Enum k) => k -> EnumSet k -> Maybe k
+lookupLT k = fmap toEnum . I.lookupLT (fromEnum k) . unWrap
 {-# INLINE lookupLT #-}
 
-lookupGT :: (Enum e) => e -> EnumSet e -> Maybe e
-lookupGT e = fmap toEnum . I.lookupGT (fromEnum e) . unWrap
+lookupGT :: (Enum k) => k -> EnumSet k -> Maybe k
+lookupGT k = fmap toEnum . I.lookupGT (fromEnum k) . unWrap
 {-# INLINE lookupGT #-}
 
-lookupLE :: (Enum e) => e -> EnumSet e -> Maybe e
-lookupLE e = fmap toEnum . I.lookupLE (fromEnum e) . unWrap
+lookupLE :: (Enum k) => k -> EnumSet k -> Maybe k
+lookupLE k = fmap toEnum . I.lookupLE (fromEnum k) . unWrap
 {-# INLINE lookupLE #-}
 
-lookupGE :: (Enum e) => e -> EnumSet e -> Maybe e
-lookupGE e = fmap toEnum . I.lookupGE (fromEnum e) . unWrap
+lookupGE :: (Enum k) => k -> EnumSet k -> Maybe k
+lookupGE k = fmap toEnum . I.lookupGE (fromEnum k) . unWrap
 {-# INLINE lookupGE #-}
 
-empty :: EnumSet e
+empty :: EnumSet k
 empty = EnumSet I.empty
 {-# INLINE empty #-}
 
-singleton :: (Enum e) => e -> EnumSet e
+singleton :: (Enum k) => k -> EnumSet k
 singleton = EnumSet . I.singleton . fromEnum
 {-# INLINE singleton #-}
 
-insert :: (Enum e) => e -> EnumSet e -> EnumSet e
-insert e = EnumSet . I.insert (fromEnum e) . unWrap
+insert :: (Enum k) => k -> EnumSet k -> EnumSet k
+insert k = EnumSet . I.insert (fromEnum k) . unWrap
 {-# INLINE insert #-}
 
-delete :: (Enum e) => e -> EnumSet e -> EnumSet e
-delete e = EnumSet . I.delete (fromEnum e) . unWrap
+delete :: (Enum k) => k -> EnumSet k -> EnumSet k
+delete k = EnumSet . I.delete (fromEnum k) . unWrap
 {-# INLINE delete #-}
 
-unions :: [EnumSet e] -> EnumSet e
+unions :: [EnumSet k] -> EnumSet k
 unions = EnumSet . I.unions . P.map unWrap
 {-# INLINE unions #-}
 
-union :: EnumSet e -> EnumSet e -> EnumSet e
+union :: EnumSet k -> EnumSet k -> EnumSet k
 union (EnumSet is1) (EnumSet is2) = EnumSet $ I.union is1 is2
 {-# INLINE union #-}
 
-difference :: EnumSet e -> EnumSet e -> EnumSet e
+difference :: EnumSet k -> EnumSet k -> EnumSet k
 difference (EnumSet is1) (EnumSet is2) = EnumSet $ I.difference is1 is2
 {-# INLINE difference #-}
 
-intersection :: EnumSet e -> EnumSet e -> EnumSet e
+intersection :: EnumSet k -> EnumSet k -> EnumSet k
 intersection (EnumSet is1) (EnumSet is2) = EnumSet $ I.intersection is1 is2
 {-# INLINE intersection #-}
 
-isProperSubsetOf :: EnumSet e -> EnumSet e -> Bool
+isProperSubsetOf :: EnumSet k -> EnumSet k -> Bool
 isProperSubsetOf (EnumSet is1) (EnumSet is2) = I.isProperSubsetOf is1 is2
 {-# INLINE isProperSubsetOf #-}
 
-isSubsetOf :: EnumSet e -> EnumSet e -> Bool
+isSubsetOf :: EnumSet k -> EnumSet k -> Bool
 isSubsetOf (EnumSet is1) (EnumSet is2) = I.isSubsetOf is1 is2
 {-# INLINE isSubsetOf #-}
 
-filter :: (Enum e) => (e -> Bool) -> EnumSet e -> EnumSet e
+filter :: (Enum k) => (k -> Bool) -> EnumSet k -> EnumSet k
 filter f = EnumSet . I.filter (f . toEnum) . unWrap
 {-# INLINE filter #-}
 
-partition :: (Enum e) => (e -> Bool) -> EnumSet e -> (EnumSet e, EnumSet e)
+partition :: (Enum k) => (k -> Bool) -> EnumSet k -> (EnumSet k, EnumSet k)
 partition f = pairWrap . I.partition (f . toEnum) . unWrap
 {-# INLINE partition #-}
 
-split :: (Enum e) => e -> EnumSet e -> (EnumSet e, EnumSet e)
-split e = pairWrap . I.split (fromEnum e) . unWrap
+split :: (Enum k) => k -> EnumSet k -> (EnumSet k, EnumSet k)
+split k = pairWrap . I.split (fromEnum k) . unWrap
 {-# INLINE split #-}
 
-splitMember :: (Enum e) => e -> EnumSet e -> (EnumSet e, Bool, EnumSet e)
-splitMember e =  wrap . I.splitMember (fromEnum e) . unWrap
+splitMember :: (Enum k) => k -> EnumSet k -> (EnumSet k, Bool, EnumSet k)
+splitMember k =  wrap . I.splitMember (fromEnum k) . unWrap
   where
     wrap (is1, b, is2) = (EnumSet is1, b, EnumSet is2)
 {-# INLINE splitMember #-}
 
-maxView :: (Enum e) => EnumSet e -> Maybe (e, EnumSet e)
+maxView :: (Enum k) => EnumSet k -> Maybe (k, EnumSet k)
 maxView = fmap toEnumWrap . I.maxView . unWrap
 {-# INLINE maxView #-}
 
-minView :: (Enum e) => EnumSet e -> Maybe (e, EnumSet e)
+minView :: (Enum k) => EnumSet k -> Maybe (k, EnumSet k)
 minView = fmap toEnumWrap . I.minView  . unWrap
 {-# INLINE minView #-}
 
-deleteFindMin :: (Enum e) => EnumSet e -> (e, EnumSet e)
+deleteFindMin :: (Enum k) => EnumSet k -> (k, EnumSet k)
 deleteFindMin = toEnumWrap  . I.deleteFindMin . unWrap
 {-# INLINE deleteFindMin #-}
 
-deleteFindMax :: (Enum e) => EnumSet e -> (e, EnumSet e)
+deleteFindMax :: (Enum k) => EnumSet k -> (k, EnumSet k)
 deleteFindMax = toEnumWrap . I.deleteFindMax . unWrap
 {-# INLINE deleteFindMax #-}
 
-findMin :: (Enum e) => EnumSet e -> e
+findMin :: (Enum k) => EnumSet k -> k
 findMin = toEnum . I.findMin . unWrap
 {-# INLINE findMin #-}
 
-findMax :: (Enum e) => EnumSet e -> e
+findMax :: (Enum k) => EnumSet k -> k
 findMax = toEnum . I.findMax . unWrap
 {-# INLINE findMax #-}
 
-deleteMin :: EnumSet e -> EnumSet e
+deleteMin :: EnumSet k -> EnumSet k
 deleteMin = EnumSet . I.deleteMin . unWrap
 {-# INLINE deleteMin #-}
 
-deleteMax :: EnumSet e -> EnumSet e
+deleteMax :: EnumSet k -> EnumSet k
 deleteMax = EnumSet . I.deleteMax . unWrap
 {-# INLINE deleteMax #-}
 
-map :: (Enum e) => (e -> e) -> EnumSet e -> EnumSet e
+map :: (Enum k) => (k -> k) -> EnumSet k -> EnumSet k
 map f = EnumSet . I.map (fromEnum . f . toEnum) . unWrap
 {-# INLINE map #-}
 
-foldr :: (Enum e) => (e -> b -> b) -> b -> EnumSet e -> b
+foldr :: (Enum k) => (k -> b -> b) -> b -> EnumSet k -> b
 foldr f acc = I.foldr (f . toEnum) acc . unWrap
 {-# INLINE foldr #-}
 
-foldl :: (Enum e) => (a -> e -> a) -> a -> EnumSet e -> a
+foldl :: (Enum k) => (a -> k -> a) -> a -> EnumSet k -> a
 foldl f acc = I.foldl (\a -> f a . toEnum) acc . unWrap
 {-# INLINE foldl #-}
 
-foldr' :: (Enum e) => (e -> b -> b) -> b -> EnumSet e -> b
+foldr' :: (Enum k) => (k -> b -> b) -> b -> EnumSet k -> b
 foldr' f acc = I.foldr' (f . toEnum) acc . unWrap
 {-# INLINE foldr' #-}
 
-foldl' :: (Enum e) => (a -> e -> a) -> a -> EnumSet e -> a
+foldl' :: (Enum k) => (a -> k -> a) -> a -> EnumSet k -> a
 foldl' f acc = I.foldl' (\a -> f a . toEnum) acc . unWrap
 {-# INLINE foldl' #-}
 
-fold :: (Enum e) => (e -> b -> b) -> b -> EnumSet e -> b
+fold :: (Enum k) => (k -> b -> b) -> b -> EnumSet k -> b
 fold f acc = I.fold (f . toEnum) acc . unWrap
 {-# INLINE fold #-}
 
-elems :: (Enum e) => EnumSet e -> [e]
+elems :: (Enum k) => EnumSet k -> [k]
 elems = P.map toEnum . I.elems . unWrap
 {-# INLINE elems #-}
 
-toList :: (Enum e) => EnumSet e -> [e]
+toList :: (Enum k) => EnumSet k -> [k]
 toList = P.map toEnum . I.toList . unWrap
 {-# INLINE toList #-}
 
-toAscList :: (Enum e) => EnumSet e -> [e]
+toAscList :: (Enum k) => EnumSet k -> [k]
 toAscList = P.map toEnum . I.toAscList . unWrap
 {-# INLINE toAscList #-}
 
-toDescList :: (Enum e) => EnumSet e -> [e]
+toDescList :: (Enum k) => EnumSet k -> [k]
 toDescList = P.map toEnum . I.toDescList . unWrap
 {-# INLINE toDescList #-}
 
-fromList :: (Enum e) => [e] -> EnumSet e
+fromList :: (Enum k) => [k] -> EnumSet k
 fromList = EnumSet . I.fromList . P.map fromEnum
 {-# INLINE fromList #-}
 
-fromAscList :: (Enum e) => [e] -> EnumSet e
+fromAscList :: (Enum k) => [k] -> EnumSet k
 fromAscList = EnumSet . I.fromAscList . P.map fromEnum
 {-# INLINE fromAscList #-}
 
-fromDistinctAscList :: (Enum e) => [e] -> EnumSet e
+fromDistinctAscList :: (Enum k) => [k] -> EnumSet k
 fromDistinctAscList = EnumSet . I.fromDistinctAscList . P.map fromEnum
 {-# INLINE fromDistinctAscList #-}
