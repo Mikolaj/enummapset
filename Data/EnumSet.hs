@@ -30,6 +30,10 @@ module Data.EnumSet
   , size
   , member
   , notMember
+  , lookupLT
+  , lookupGT
+  , lookupLE
+  , lookupGE
   , isSubsetOf
   , isProperSubsetOf
 
@@ -54,8 +58,15 @@ module Data.EnumSet
   -- * Map
   , map
 
-  -- * Fold
+  -- * Folds
+  , foldr
+  , foldl
+  -- ** Strict folds
+  , foldr'
+  , foldl'
+  -- ** Legacy folds
   , fold
+
 
   -- * Min\/Max
   , findMin
@@ -76,11 +87,13 @@ module Data.EnumSet
 
   -- ** Ordered list
   , toAscList
+  , toDescList
   , fromAscList
   , fromDistinctAscList
+
   ) where
 
-import Prelude hiding ( filter, lookup, map, null )
+import Prelude hiding ( filter, foldl, foldr, lookup, map, null )
 import qualified Prelude as P
 
 import Data.IntSet ( IntSet )
@@ -153,6 +166,22 @@ member e = I.member (fromEnum e) . unWrap
 notMember :: (Enum e) => e -> EnumSet e -> Bool
 notMember e = I.notMember (fromEnum e) . unWrap
 {-# INLINE notMember #-}
+
+lookupLT :: (Enum e) => e -> EnumSet e -> Maybe e
+lookupLT e = fmap toEnum . I.lookupLT (fromEnum e) . unWrap
+{-# INLINE lookupLT #-}
+
+lookupGT :: (Enum e) => e -> EnumSet e -> Maybe e
+lookupGT e = fmap toEnum . I.lookupGT (fromEnum e) . unWrap
+{-# INLINE lookupGT #-}
+
+lookupLE :: (Enum e) => e -> EnumSet e -> Maybe e
+lookupLE e = fmap toEnum . I.lookupLE (fromEnum e) . unWrap
+{-# INLINE lookupLE #-}
+
+lookupGE :: (Enum e) => e -> EnumSet e -> Maybe e
+lookupGE e = fmap toEnum . I.lookupGE (fromEnum e) . unWrap
+{-# INLINE lookupGE #-}
 
 empty :: EnumSet e
 empty = EnumSet I.empty
@@ -248,6 +277,22 @@ map :: (Enum e) => (e -> e) -> EnumSet e -> EnumSet e
 map f = EnumSet . I.map (fromEnum . f . toEnum) . unWrap
 {-# INLINE map #-}
 
+foldr :: (Enum e) => (e -> b -> b) -> b -> EnumSet e -> b
+foldr f acc = I.foldr (f . toEnum) acc . unWrap
+{-# INLINE foldr #-}
+
+foldl :: (Enum e) => (a -> e -> a) -> a -> EnumSet e -> a
+foldl f acc = I.foldl (\a -> f a . toEnum) acc . unWrap
+{-# INLINE foldl #-}
+
+foldr' :: (Enum e) => (e -> b -> b) -> b -> EnumSet e -> b
+foldr' f acc = I.foldr' (f . toEnum) acc . unWrap
+{-# INLINE foldr' #-}
+
+foldl' :: (Enum e) => (a -> e -> a) -> a -> EnumSet e -> a
+foldl' f acc = I.foldl' (\a -> f a . toEnum) acc . unWrap
+{-# INLINE foldl' #-}
+
 fold :: (Enum e) => (e -> b -> b) -> b -> EnumSet e -> b
 fold f acc = I.fold (f . toEnum) acc . unWrap
 {-# INLINE fold #-}
@@ -263,6 +308,10 @@ toList = P.map toEnum . I.toList . unWrap
 toAscList :: (Enum e) => EnumSet e -> [e]
 toAscList = P.map toEnum . I.toAscList . unWrap
 {-# INLINE toAscList #-}
+
+toDescList :: (Enum e) => EnumSet e -> [e]
+toDescList = P.map toEnum . I.toDescList . unWrap
+{-# INLINE toDescList #-}
 
 fromList :: (Enum e) => [e] -> EnumSet e
 fromList = EnumSet . I.fromList . P.map fromEnum
