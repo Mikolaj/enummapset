@@ -99,6 +99,7 @@ import qualified Prelude as P
 import Data.IntSet ( IntSet )
 import qualified Data.IntSet as I
 
+import Control.Arrow ( (***) )
 import Control.DeepSeq ( NFData )
 import Data.Monoid ( Monoid )
 import Data.Typeable ( Typeable )
@@ -130,18 +131,6 @@ intSetToEnumSet = EnumSet
 -- | Unwrap 'IntSet'.
 enumSetToIntSet :: EnumSet k -> IntSet
 enumSetToIntSet = unWrap
-
---
--- A few useful functions used through the module; not exported.
---
-
-pairWrap :: (IntSet, IntSet) -> (EnumSet k, EnumSet k)
-pairWrap (is1, is2) = (EnumSet is1, EnumSet is2)
-{-# INLINE pairWrap #-}
-
-toEnumWrap :: (Enum k) => (Int, IntSet) -> (k, EnumSet k)
-toEnumWrap (i, is) = (toEnum i, EnumSet is)
-{-# INLINE toEnumWrap #-}
 
 --
 -- Here begins the main part.
@@ -228,11 +217,11 @@ filter f = EnumSet . I.filter (f . toEnum) . unWrap
 {-# INLINE filter #-}
 
 partition :: (Enum k) => (k -> Bool) -> EnumSet k -> (EnumSet k, EnumSet k)
-partition f = pairWrap . I.partition (f . toEnum) . unWrap
+partition f = (EnumSet *** EnumSet) . I.partition (f . toEnum) . unWrap
 {-# INLINE partition #-}
 
 split :: (Enum k) => k -> EnumSet k -> (EnumSet k, EnumSet k)
-split k = pairWrap . I.split (fromEnum k) . unWrap
+split k = (EnumSet *** EnumSet) . I.split (fromEnum k) . unWrap
 {-# INLINE split #-}
 
 splitMember :: (Enum k) => k -> EnumSet k -> (EnumSet k, Bool, EnumSet k)
@@ -242,19 +231,19 @@ splitMember k =  wrap . I.splitMember (fromEnum k) . unWrap
 {-# INLINE splitMember #-}
 
 maxView :: (Enum k) => EnumSet k -> Maybe (k, EnumSet k)
-maxView = fmap toEnumWrap . I.maxView . unWrap
+maxView = fmap (toEnum *** EnumSet) . I.maxView . unWrap
 {-# INLINE maxView #-}
 
 minView :: (Enum k) => EnumSet k -> Maybe (k, EnumSet k)
-minView = fmap toEnumWrap . I.minView  . unWrap
+minView = fmap (toEnum *** EnumSet) . I.minView  . unWrap
 {-# INLINE minView #-}
 
 deleteFindMin :: (Enum k) => EnumSet k -> (k, EnumSet k)
-deleteFindMin = toEnumWrap  . I.deleteFindMin . unWrap
+deleteFindMin = (toEnum *** EnumSet) . I.deleteFindMin . unWrap
 {-# INLINE deleteFindMin #-}
 
 deleteFindMax :: (Enum k) => EnumSet k -> (k, EnumSet k)
-deleteFindMax = toEnumWrap . I.deleteFindMax . unWrap
+deleteFindMax = (toEnum *** EnumSet) . I.deleteFindMax . unWrap
 {-# INLINE deleteFindMax #-}
 
 findMin :: (Enum k) => EnumSet k -> k
