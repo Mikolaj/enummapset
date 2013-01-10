@@ -10,7 +10,7 @@ license:        BSD3
 license-file:   LICENSE
 author:         Michal Terepeta
 maintainer:     Michal Terepeta <michal.terepeta@gmail.com>
-copyright:      (c) 2011 Michal Terepeta
+copyright:      (c) 2011-2013 Michal Terepeta
 
 category:       Data
 build-type:     Simple

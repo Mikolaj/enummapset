@@ -4,7 +4,7 @@
 -- |
 -- Module      :  $Header$
 -- Description :  Data.IntSet with Enum elements.
--- Copyright   :  (c) 2011 Michal Terepeta
+-- Copyright   :  (c) 2011-2013 Michal Terepeta
 -- License     :  BSD3
 -- Maintainer  :  michal.terepeta@gmail.com
 -- Stability   :  alpha
