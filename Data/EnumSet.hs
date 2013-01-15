@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 -- |
@@ -8,7 +8,7 @@
 -- License     :  BSD3
 -- Maintainer  :  michal.terepeta@gmail.com
 -- Stability   :  alpha
--- Portability :  uses GeneralizedNewtypeDeriving
+-- Portability :  uses DeriveDataTypeable and GeneralizedNewtypeDeriving
 
 -- This is a simple wrapper for 'Data.IntSet' that allows storing any elements
 -- of Enum type class. Useful if one wants to have the performance of
@@ -127,10 +127,12 @@ instance (Enum k, Read k) => Read (EnumSet k) where
 -- | Wrap 'IntSet'.
 intSetToEnumSet :: IntSet -> EnumSet k
 intSetToEnumSet = EnumSet
+{-# INLINE intSetToEnumSet #-}
 
 -- | Unwrap 'IntSet'.
 enumSetToIntSet :: EnumSet k -> IntSet
 enumSetToIntSet = unWrap
+{-# INLINE enumSetToIntSet #-}
 
 --
 -- Here begins the main part.
