@@ -10,12 +10,6 @@
 -- Stability   :  alpha
 -- Portability :  uses DeriveDataTypeable and GeneralizedNewtypeDeriving
 
--- This is a simple wrapper for 'Data.IntMap' that works with any type of keys
--- that are instances of 'Enum' type class. Useful if one wants to have the
--- performance of 'Data.IntMap' and at the same time use something else than
--- 'Int's (e.g. an 'Int' wrapped with newtype). For documentation please see the
--- one for 'Data.IntMap'.
-
 module Data.EnumMap.Base
   ( EnumMap(..)
 
@@ -202,10 +196,12 @@ instance (Enum k, Read k, Read a) => Read (EnumMap k a) where
 -- | Wrap 'IntMap'.
 intMapToEnumMap :: IntMap a -> EnumMap k a
 intMapToEnumMap = EnumMap
+{-# INLINE intMapToEnumMap #-}
 
 -- | Unwrap 'IntMap'.
 enumMapToIntMap :: EnumMap k a -> IntMap a
 enumMapToIntMap = unWrap
+{-# INLINE enumMapToIntMap #-}
 
 --
 -- Here begins the main part.
