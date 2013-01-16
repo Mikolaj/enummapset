@@ -1,5 +1,5 @@
 name:           enummapset
-version:        0.2.0
+version:        0.5.2.0
 synopsis:       IntMap and IntSet with Enum keys/elements.
 description:    This package contains simple wrappers around 'Data.IntMap' and
                 'Data.IntSet' with 'Enum' keys and elements respectively.
@@ -21,14 +21,26 @@ source-repository head
   type:         git
   location:     https://github.com/michalt/enummapset.git
 
+flag debug
+  description:  Debug build (more warnings, etc.)
+  default:      False
+
 Library
   exposed-modules:
     Data.EnumMap
+    Data.EnumMap.Lazy
+    Data.EnumMap.Strict
     Data.EnumSet
 
-  build-depends:
-    base < 5,
-    containers >= 0.5 && < 0.6,
-    deepseq >= 1.2 && < 1.4
+  other-modules:
+    Data.EnumMap.Base
 
-  ghc-options: -Wall
+  -- We give the version bounds only on the containers if their dependencies
+  -- are satisfied, then enummapset should also be fine.
+  build-depends:
+    base,
+    containers >= 0.5.2 && < 0.6,
+    deepseq
+
+  if flag(debug)
+    ghc-options: -Wall
