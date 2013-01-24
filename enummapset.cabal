@@ -35,10 +35,8 @@ Library
   other-modules:
     Data.EnumMap.Base
 
-  -- We give the version bounds only on the containers if their dependencies
-  -- are satisfied, then enummapset should also be fine.
   build-depends:
-    base,
+    base < 5,
     containers >= 0.5.2 && < 0.6,
     deepseq
 
