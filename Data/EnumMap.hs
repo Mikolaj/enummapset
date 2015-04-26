@@ -34,7 +34,7 @@ insertWithKey' :: (Enum k)
 insertWithKey' f k x =
   EnumMap . I.insertWithKey' (f . toEnum) (fromEnum k) x . unWrap
 
-fold :: (Enum k) => (a -> b -> b) -> b -> EnumMap k a -> b
+fold :: (a -> b -> b) -> b -> EnumMap k a -> b
 fold f a = I.fold f a . unWrap
 
 foldWithKey :: (Enum k) => (k -> a -> b -> b) -> b -> EnumMap k a -> b

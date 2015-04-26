@@ -543,11 +543,11 @@ splitLookup k = wrap . I.splitLookup (fromEnum k) . unWrap
     wrap (im1, ma, im2) = (EnumMap im1, ma, EnumMap im2)
 {-# INLINE splitLookup #-}
 
-foldr :: (Enum k) => (a -> b -> b) -> b -> EnumMap k a -> b
+foldr :: (a -> b -> b) -> b -> EnumMap k a -> b
 foldr f a = I.foldr f a . unWrap
 {-# INLINE foldr #-}
 
-foldl :: (Enum k) => (a -> b -> a) -> a -> EnumMap k b -> a
+foldl :: (a -> b -> a) -> a -> EnumMap k b -> a
 foldl f a = I.foldl f a . unWrap
 {-# INLINE foldl #-}
 
@@ -559,11 +559,11 @@ foldlWithKey :: (Enum k) => (a -> k -> b -> a) -> a -> EnumMap k b -> a
 foldlWithKey f a = I.foldlWithKey (\a' -> f a' . toEnum) a . unWrap
 {-# INLINE foldlWithKey #-}
 
-foldr' :: (Enum k) => (a -> b -> b) -> b -> EnumMap k a -> b
+foldr' :: (a -> b -> b) -> b -> EnumMap k a -> b
 foldr' f a = I.foldr' f a . unWrap
 {-# INLINE foldr' #-}
 
-foldl' :: (Enum k) => (a -> b -> a) -> a -> EnumMap k b -> a
+foldl' :: (a -> b -> a) -> a -> EnumMap k b -> a
 foldl' f a = I.foldl' f a . unWrap
 {-# INLINE foldl' #-}
 
