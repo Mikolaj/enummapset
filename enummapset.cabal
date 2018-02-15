@@ -38,6 +38,7 @@ Library
   build-depends:
     base < 5,
     containers >= 0.5.2 && < 0.6,
+    semigroups >=0.1 && <1.0,
     deepseq
 
   if flag(debug)
