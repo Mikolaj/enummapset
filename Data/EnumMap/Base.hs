@@ -171,6 +171,7 @@ import Control.Arrow ( first, second, (***) )
 import Control.DeepSeq ( NFData )
 import Data.Foldable ( Foldable )
 import Data.Monoid ( Monoid )
+import Data.Semigroup ( Semigroup )
 import Data.Traversable ( Traversable )
 import Data.Typeable ( Typeable )
 
@@ -178,7 +179,8 @@ import Text.Read
 
 -- | Wrapper for 'IntMap' with 'Enum' keys.
 newtype EnumMap k a = EnumMap { unWrap :: IntMap a }
-  deriving (Eq, Foldable, Functor, Ord, Monoid, Traversable, Typeable, NFData)
+  deriving (Eq, Foldable, Functor, Ord, Semigroup, Monoid,
+            Traversable, Typeable, NFData)
 
 instance (Enum k, Show k, Show a) => Show (EnumMap k a) where
   showsPrec p em = showParen (p > 10) $

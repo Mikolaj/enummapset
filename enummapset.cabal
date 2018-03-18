@@ -1,5 +1,5 @@
 name:           enummapset
-version:        0.5.2.1
+version:        0.5.2.2
 synopsis:       IntMap and IntSet with Enum keys/elements.
 description:    This package contains simple wrappers around 'Data.IntMap' and
                 'Data.IntSet' with 'Enum' keys and elements respectively.
@@ -38,6 +38,7 @@ Library
   build-depends:
     base < 5,
     containers >= 0.5.2 && < 0.6,
+    semigroups >=0.1 && <1.0,
     deepseq
 
   if flag(debug)

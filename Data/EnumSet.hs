@@ -102,13 +102,14 @@ import qualified Data.IntSet as I
 import Control.Arrow ( (***) )
 import Control.DeepSeq ( NFData )
 import Data.Monoid ( Monoid )
+import Data.Semigroup ( Semigroup )
 import Data.Typeable ( Typeable )
 
 import Text.Read
 
 -- | Wrapper for 'IntSet' with 'Enum' elements.
 newtype EnumSet k = EnumSet { unWrap :: IntSet }
-  deriving (Eq, Monoid, Ord, Typeable, NFData)
+  deriving (Eq, Semigroup, Monoid, Ord, Typeable, NFData)
 
 instance (Enum k, Show k) => Show (EnumSet k) where
   showsPrec p ks = showParen (p > 10) $
