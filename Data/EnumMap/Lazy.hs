@@ -122,6 +122,8 @@ module Data.EnumMap.Lazy
   -- * Filter
   , filter
   , filterWithKey
+  , restrictKeys
+  , withoutKeys
   , partition
   , partitionWithKey
 
