@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP, DataKinds, FlexibleContexts, FlexibleInstances,
+             KindSignatures, TypeFamilies, UndecidableInstances #-}
 -- |
 -- Module      :  $Header$
 -- Description :  Data.IntMap with Enum keys.
@@ -13,29 +15,53 @@
 
 module Data.EnumMap
   ( module Data.EnumMap.Lazy
+#ifdef __GLASGOW_HASKELL__
+-- For GHC, we disable these, pending removal. For anything else,
+-- we just don't define them at all.
   , insertWith'
   , insertWithKey'
   , fold
   , foldWithKey
+#endif
   ) where
 
-import Prelude hiding ( filter, foldr, foldl, lookup, map, null )
-
 import Data.EnumMap.Lazy
-import Data.EnumMap.Base
 
-import qualified Data.IntMap as I
+#ifdef __GLASGOW_HASKELL__
+-- Unfortunately we can't access this module:
+-- import Utils.Containers.Internal.TypeError
+-- so we copy-paste things first:
 
-insertWith' :: (Enum k) => (a -> a -> a) -> k -> a -> EnumMap k a -> EnumMap k a
-insertWith' f k x = EnumMap . I.insertWith' f (fromEnum k) x . unWrap
+import GHC.TypeLits
 
-insertWithKey' :: (Enum k)
-  => (k -> a -> a -> a) -> k -> a -> EnumMap k a -> EnumMap k a
-insertWithKey' f k x =
-  EnumMap . I.insertWithKey' (f . toEnum) (fromEnum k) x . unWrap
+class Whoops (a :: Symbol)
 
-fold :: (a -> b -> b) -> b -> EnumMap k a -> b
-fold f a = I.fold f a . unWrap
+#if __GLASGOW_HASKELL__ >= 800
+instance TypeError ('Text a) => Whoops a
+#endif
 
-foldWithKey :: (Enum k) => (k -> a -> b -> b) -> b -> EnumMap k a -> b
-foldWithKey f a = I.foldWithKey (f . toEnum) a . unWrap
+
+-- | This function is being removed and is no longer usable.
+-- Use 'Data.EnumMap.Strict.insertWith'
+insertWith' :: Whoops "Data.EnumMap.insertWith' is gone. Use Data.EnumMap.Strict.insertWith."
+            => (a -> a -> a) -> k -> a -> EnumMap k a -> EnumMap k a
+insertWith' _ _ _ _ = undefined
+
+-- | This function is being removed and is no longer usable.
+-- Use 'Data.EnumMap.Strict.insertWithKey'.
+insertWithKey' :: Whoops "Data.EnumMap.insertWithKey' is gone. Use Data.EnumMap.Strict.insertWithKey."
+               => (k -> a -> a -> a) -> k -> a -> EnumMap k a -> EnumMap k a
+insertWithKey' _ _ _ _ = undefined
+
+-- | This function is being removed and is no longer usable.
+-- Use 'Data.EnumMap.Lazy.foldr'.
+fold :: Whoops "Data.EnumMap.fold' is gone. Use Data.EnumMap.foldr or Prelude.foldr."
+     => (a -> b -> b) -> b -> EnumMap k a -> b
+fold _ _ _ = undefined
+
+-- | This function is being removed and is no longer usable.
+-- Use 'foldrWithKey'.
+foldWithKey :: Whoops "Data.EnumMap.foldWithKey is gone. Use foldrWithKey."
+            => (k -> a -> b -> b) -> b -> EnumMap k a -> b
+foldWithKey _ _ _ = undefined
+#endif
