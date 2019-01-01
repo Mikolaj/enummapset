@@ -4,14 +4,12 @@ synopsis:       IntMap and IntSet with Enum keys/elements.
 description:    This package contains simple wrappers around 'Data.IntMap' and
                 'Data.IntSet' with 'Enum' keys and elements respectively.
                 Especially useful for 'Int's wrapped with newtype.
-homepage:       https://github.com/michalt/enummapset
-bug-reports:    https://github.com/michalt/enummapset/issues
+homepage:       https://github.com/Mikolaj/enummapset
+bug-reports:    https://github.com/Mikolaj/enummapset/issues
 license:        BSD3
 license-file:   LICENSE
 author:         Michal Terepeta
-maintainer:     Michal Terepeta <michal.terepeta@gmail.com>
-copyright:      (c) 2011-2013 Michal Terepeta
-
+maintainer:     Mikolaj Konarski <mikolaj.konarski@funktory.com>
 category:       Data
 build-type:     Simple
 
@@ -19,7 +17,7 @@ cabal-version:  >=1.6
 
 source-repository head
   type:         git
-  location:     https://github.com/michalt/enummapset.git
+  location:     https://github.com/Mikolaj/enummapset.git
 
 flag debug
   description:  Debug build (more warnings, etc.)

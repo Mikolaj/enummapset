@@ -4,9 +4,9 @@
 -- |
 -- Module      :  $Header$
 -- Description :  Data.IntSet with Enum elements.
--- Copyright   :  (c) 2011-2013 Michal Terepeta
+-- Copyright   :  (c) 2011-2019 Michal Terepeta
 -- License     :  BSD3
--- Maintainer  :  michal.terepeta@gmail.com
+-- Maintainer  :  mikolaj.konarski@funktory.com
 -- Stability   :  alpha
 -- Portability :  uses DeriveDataTypeable and GeneralizedNewtypeDeriving
 
