@@ -1,3 +1,7 @@
+-- Note that all these extensions are only needed for @Whoops@ & Co
+-- and only as long as "Utils.Containers.Internal.TypeError"
+-- is not exposed in the containers package
+-- (see https://github.com/haskell/containers/issues/586).
 {-# LANGUAGE CPP, DataKinds, FlexibleContexts, FlexibleInstances,
              KindSignatures, TypeFamilies, UndecidableInstances #-}
 -- |
