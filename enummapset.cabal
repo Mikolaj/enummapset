@@ -10,10 +10,10 @@ license:        BSD3
 license-file:   LICENSE
 author:         Michal Terepeta
 maintainer:     Mikolaj Konarski <mikolaj.konarski@funktory.com>
-category:       Data
+category:       Data Structures
 build-type:     Simple
 
-cabal-version:  >=1.6
+cabal-version:  >=1.8
 
 source-repository head
   type:         git
@@ -34,10 +34,14 @@ Library
     Data.EnumMap.Base
 
   build-depends:
-    base < 5,
+    base >= 4.6 && < 5,
     containers >= 0.5.2 && < 0.7,
     semigroups >=0.1 && <1.0,
     deepseq
 
   if flag(debug)
     ghc-options: -Wall
+
+  other-extensions: CPP, BangPatterns,
+                    DataKinds, FlexibleContexts, FlexibleInstances,
+                    KindSignatures, TypeFamilies, UndecidableInstances
