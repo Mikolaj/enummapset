@@ -1,3 +1,5 @@
+-- Copied from https://github.com/haskell/containers and tweaked slithgly
+
 {-# LANGUAGE CPP #-}
 import           Data.Bits (popCount, (.&.))
 import           Data.EnumSet

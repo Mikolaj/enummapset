@@ -1,3 +1,5 @@
+-- Copied from https://github.com/haskell/containers
+
 {-# LANGUAGE CPP #-}
 module IntSetValidity (valid) where
 
