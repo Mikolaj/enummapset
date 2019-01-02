@@ -45,3 +45,26 @@ Library
   other-extensions: CPP, BangPatterns,
                     DataKinds, FlexibleContexts, FlexibleInstances,
                     KindSignatures, TypeFamilies, UndecidableInstances
+
+Test-suite intset-properties
+  hs-source-dirs: tests, .
+  main-is: intset-properties.hs
+  other-modules:
+      Data.EnumSet
+      IntSetValidity
+  type: exitcode-stdio-1.0
+  cpp-options: -DTESTING
+
+  build-depends: base >= 4.6 && < 5, array >= 0.4.0.0, deepseq >= 1.2 && < 1.5, ghc-prim
+  ghc-options: -O2
+  other-extensions: CPP, BangPatterns,
+                    DataKinds, FlexibleContexts, FlexibleInstances,
+                    KindSignatures, TypeFamilies, UndecidableInstances
+
+  build-depends:
+      containers,
+      HUnit,
+      QuickCheck >= 2.7.1,
+      test-framework,
+      test-framework-hunit,
+      test-framework-quickcheck2
