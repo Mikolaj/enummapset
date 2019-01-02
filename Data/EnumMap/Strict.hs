@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 -- |
 -- Module      :  $Header$
 -- Description :  Data.IntMap.Strict with Enum keys.
@@ -122,8 +123,10 @@ module Data.EnumMap.Strict
   -- * Filter
   , filter
   , filterWithKey
+#if (MIN_VERSION_containers(0,5,8))
   , restrictKeys
   , withoutKeys
+#endif
   , partition
   , partitionWithKey
 
@@ -158,60 +161,29 @@ module Data.EnumMap.Strict
   , maxViewWithKey
   ) where
 
-import Prelude hiding ( filter, foldr, foldl, lookup, map, null )
+import           Prelude hiding (filter, foldl, foldr, lookup, map, null)
 import qualified Prelude as P
 
-import Control.Arrow ( (***), first, second )
+import Control.Arrow (first, second, (***))
 
 import qualified Data.IntMap.Strict as I
 
-import Data.EnumSet ( EnumSet )
+import           Data.EnumSet (EnumSet)
 import qualified Data.EnumSet as EnumSet
 
-import Data.EnumMap.Base hiding
-  ( findWithDefault
-  , singleton
-  , insert
-  , insertWith
-  , insertWithKey
-  , insertLookupWithKey
-  , adjust
-  , adjustWithKey
-  , update
-  , updateWithKey
-  , updateLookupWithKey
-  , alter
-  , unionsWith
-  , unionWith
-  , unionWithKey
-  , differenceWith
-  , differenceWithKey
-  , intersectionWith
-  , intersectionWithKey
-  , mergeWithKey
-  , updateMinWithKey
-  , updateMaxWithKey
-  , updateMax
-  , updateMin
-  , map
-  , mapWithKey
-  , mapAccum
-  , mapAccumWithKey
-  , mapAccumRWithKey
-  , mapKeysWith
-  , mapMaybe
-  , mapMaybeWithKey
-  , mapEither
-  , mapEitherWithKey
-  , fromSet
-  , fromList
-  , fromListWith
-  , fromListWithKey
-  , fromAscList
-  , fromAscListWith
-  , fromAscListWithKey
-  , fromDistinctAscList
-  )
+import Data.EnumMap.Base hiding (adjust, adjustWithKey, alter, differenceWith,
+                          differenceWithKey, findWithDefault, fromAscList,
+                          fromAscListWith, fromAscListWithKey,
+                          fromDistinctAscList, fromList, fromListWith,
+                          fromListWithKey, fromSet, insert, insertLookupWithKey,
+                          insertWith, insertWithKey, intersectionWith,
+                          intersectionWithKey, map, mapAccum, mapAccumRWithKey,
+                          mapAccumWithKey, mapEither, mapEitherWithKey,
+                          mapKeysWith, mapMaybe, mapMaybeWithKey, mapWithKey,
+                          mergeWithKey, singleton, unionWith, unionWithKey,
+                          unionsWith, update, updateLookupWithKey, updateMax,
+                          updateMaxWithKey, updateMin, updateMinWithKey,
+                          updateWithKey)
 
 findWithDefault :: (Enum k) => a -> k -> EnumMap k a -> a
 findWithDefault def k = I.findWithDefault def (fromEnum k) . unWrap

@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                        #-}
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DeriveTraversable          #-}
@@ -122,8 +123,10 @@ module Data.EnumMap.Base
   -- * Filter
   , filter
   , filterWithKey
+#if (MIN_VERSION_containers(0,5,8))
   , restrictKeys
   , withoutKeys
+#endif
   , partition
   , partitionWithKey
 
@@ -509,13 +512,17 @@ filterWithKey :: (Enum k) => (k -> a -> Bool) -> EnumMap k a -> EnumMap k a
 filterWithKey p = EnumMap . I.filterWithKey (p . toEnum) . unWrap
 {-# INLINE filterWithKey #-}
 
+#if (MIN_VERSION_containers(0,5,8))
 restrictKeys :: (Enum k) => EnumMap k a -> EnumSet k -> EnumMap k a
-restrictKeys m s = EnumMap $ I.restrictKeys (unWrap m) (EnumSet.enumSetToIntSet s)
+restrictKeys m s =
+  EnumMap $ I.restrictKeys (unWrap m) (EnumSet.enumSetToIntSet s)
 {-# INLINE restrictKeys #-}
 
 withoutKeys :: (Enum k) => EnumMap k a -> EnumSet k -> EnumMap k a
-withoutKeys m s = EnumMap $ I.withoutKeys (unWrap m) (EnumSet.enumSetToIntSet s)
+withoutKeys m s =
+  EnumMap $ I.withoutKeys (unWrap m) (EnumSet.enumSetToIntSet s)
 {-# INLINE withoutKeys #-}
+#endif
 
 partition :: (a -> Bool) -> EnumMap k a -> (EnumMap k a, EnumMap k a)
 partition p = (EnumMap *** EnumMap) . I.partition p . unWrap

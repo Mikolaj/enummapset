@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 -- |
 -- Module      :  $Header$
 -- Description :  Data.IntMap.Lazy with Enum keys.
@@ -122,8 +123,10 @@ module Data.EnumMap.Lazy
   -- * Filter
   , filter
   , filterWithKey
+#if (MIN_VERSION_containers(0,5,8))
   , restrictKeys
   , withoutKeys
+#endif
   , partition
   , partitionWithKey
 
@@ -158,6 +161,6 @@ module Data.EnumMap.Lazy
   , maxViewWithKey
   ) where
 
-import Prelude hiding ( filter, foldr, foldl, lookup, map, null )
+import Prelude hiding (filter, foldl, foldr, lookup, map, null)
 
 import Data.EnumMap.Base
