@@ -3,6 +3,7 @@
 -- Module      :  $Header$
 -- Description :  Data.IntMap.Lazy with Enum keys.
 -- Copyright   :  (c) 2011-2019 Michal Terepeta
+--                (c) 2019-2020 Mikolaj Konarski and others (see git history)
 -- License     :  BSD3
 -- Maintainer  :  mikolaj.konarski@funktory.com
 -- Stability   :  alpha

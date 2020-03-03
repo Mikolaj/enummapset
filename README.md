@@ -11,6 +11,6 @@ Especially useful for 'Int's wrapped with `newtype`.
 Copyright
 ---------
 
-Copyright (c) 2011-2019 Michal Terepeta
+Copyright (c) 2011-2019 Michal Terepeta 
 
-Copyright (c) 2019 Mikolaj Konarski and others (see git history)
+Copyright (c) 2019-2020 Mikolaj Konarski and others (see git history)
