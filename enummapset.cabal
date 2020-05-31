@@ -14,7 +14,7 @@ maintainer:     Mikolaj Konarski <mikolaj.konarski@funktory.com>
 category:       Data Structures
 build-type:     Simple
 
-cabal-version:  >=1.8
+cabal-version:  >=1.10
 
 extra-source-files: README.md
 
