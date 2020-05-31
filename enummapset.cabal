@@ -1,5 +1,5 @@
 name:           enummapset
-version:        0.6.0.2
+version:        0.6.0.3
 synopsis:       IntMap and IntSet with Enum keys/elements.
 description:    This package contains simple wrappers around 'Data.IntMap' and
                 'Data.IntSet' with 'Enum' keys and elements respectively.
@@ -8,8 +8,7 @@ homepage:       https://github.com/Mikolaj/enummapset
 bug-reports:    https://github.com/Mikolaj/enummapset/issues
 license:        BSD3
 license-file:   LICENSE
-tested-with:    GHC==7.8.4, GHC==7.10.3, GHC==8.0.2, GHC==8.2.2, GHC==8.4.4,
-                GHC==8.6.3
+tested-with:    GHC==7.8.4, GHC==7.10.3, GHC==8.0.2, GHC==8.2.2, GHC==8.4.4, GHC==8.6.5, GHC==8.8.3, GHC==8.10.1
 author:         Michal Terepeta
 maintainer:     Mikolaj Konarski <mikolaj.konarski@funktory.com>
 category:       Data Structures
