@@ -124,10 +124,10 @@ module Data.EnumMap.Base
   -- * Filter
   , filter
   , filterWithKey
-
+#if (MIN_VERSION_containers(0,5,8))
   , restrictKeys
   , withoutKeys
-
+#endif
   , partition
   , partitionWithKey
 
@@ -181,7 +181,6 @@ import Data.Semigroup ( Semigroup )
 import Data.Traversable ( Traversable )
 import Data.Typeable ( Typeable )
 import Data.Aeson ( FromJSON(..), ToJSON(..) )
-
 import Text.Read
 
 -- | Wrapper for 'IntMap' with 'Enum' keys.
@@ -196,8 +195,8 @@ instance (Enum k, Show k, Show a) => Show (EnumMap k a) where
 instance (Enum k, Read k, Read a) => Read (EnumMap k a) where
   readPrec = parens . prec 10 $ do
     Ident "fromList" <- lexP
-    fromList <$> readPrec
-
+    list <- readPrec
+    return (fromList list)
 
 instance (ToJSON a) => ToJSON (EnumMap k a) where
     toJSON = toJSON . unWrap
@@ -205,7 +204,6 @@ instance (ToJSON a) => ToJSON (EnumMap k a) where
 
 instance (FromJSON a) => FromJSON (EnumMap k a) where
     parseJSON = fmap (EnumMap . I.fromList) . parseJSON
-
 --
 -- Conversion to/from 'IntMap'.
 --
@@ -521,7 +519,7 @@ filterWithKey :: (Enum k) => (k -> a -> Bool) -> EnumMap k a -> EnumMap k a
 filterWithKey p = EnumMap . I.filterWithKey (p . toEnum) . unWrap
 {-# INLINE filterWithKey #-}
 
-
+#if (MIN_VERSION_containers(0,5,8))
 restrictKeys :: (Enum k) => EnumMap k a -> EnumSet k -> EnumMap k a
 restrictKeys m s =
   EnumMap $ I.restrictKeys (unWrap m) (EnumSet.enumSetToIntSet s)
@@ -531,7 +529,7 @@ withoutKeys :: (Enum k) => EnumMap k a -> EnumSet k -> EnumMap k a
 withoutKeys m s =
   EnumMap $ I.withoutKeys (unWrap m) (EnumSet.enumSetToIntSet s)
 {-# INLINE withoutKeys #-}
-
+#endif
 
 partition :: (a -> Bool) -> EnumMap k a -> (EnumMap k a, EnumMap k a)
 partition p = (EnumMap *** EnumMap) . I.partition p . unWrap

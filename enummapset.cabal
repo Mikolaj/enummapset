@@ -47,10 +47,10 @@ Library
 
   build-depends:
     base >= 4.6 && < 5,
+    aeson,
     containers >= 0.5.2 && < 0.7,
     semigroups >=0.1 && <1.0,
-    deepseq,
-    aeson
+    deepseq
 
   if flag(debug)
     ghc-options: -Wall
@@ -70,7 +70,7 @@ Test-suite intset-properties
   type: exitcode-stdio-1.0
   cpp-options: -DTESTING
 
-  build-depends: base >= 4.6 && < 5, array >= 0.4.0.0, deepseq >= 1.2 && < 1.5, ghc-prim, aeson
+  build-depends: base >= 4.6 && < 5, aeson, array >= 0.4.0.0, deepseq >= 1.2 && < 1.5, ghc-prim
   ghc-options: -O2
   default-language: Haskell2010
   other-extensions: CPP, BangPatterns,
