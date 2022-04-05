@@ -105,8 +105,9 @@ import Control.DeepSeq ( NFData )
 import Data.Monoid ( Monoid )
 import Data.Semigroup ( Semigroup )
 import Data.Typeable ( Typeable )
-
+import Data.Aeson ( FromJSON(..), ToJSON(..) )
 import Text.Read
+
 
 -- | Wrapper for 'IntSet' with 'Enum' elements.
 newtype EnumSet k = EnumSet { unWrap :: IntSet }
@@ -119,8 +120,14 @@ instance (Enum k, Show k) => Show (EnumSet k) where
 instance (Enum k, Read k) => Read (EnumSet k) where
   readPrec = parens . prec 10 $ do
     Ident "fromList" <- lexP
-    list <- readPrec
-    return (fromList list)
+    fromList <$> readPrec
+
+instance (ToJSON a) => ToJSON (EnumSet a) where
+    toJSON = toJSON . unWrap
+    toEncoding = toEncoding . unWrap
+
+instance (FromJSON a) => FromJSON (EnumSet a) where
+    parseJSON = fmap (EnumSet . I.fromList) . parseJSON
 
 --
 -- Conversion to/from 'IntSet'.
