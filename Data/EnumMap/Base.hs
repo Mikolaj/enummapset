@@ -124,10 +124,10 @@ module Data.EnumMap.Base
   -- * Filter
   , filter
   , filterWithKey
-#if (MIN_VERSION_containers(0,5,8))
+
   , restrictKeys
   , withoutKeys
-#endif
+
   , partition
   , partitionWithKey
 
@@ -195,8 +195,7 @@ instance (Enum k, Show k, Show a) => Show (EnumMap k a) where
 instance (Enum k, Read k, Read a) => Read (EnumMap k a) where
   readPrec = parens . prec 10 $ do
     Ident "fromList" <- lexP
-    list <- readPrec
-    return (fromList list)
+    fromList <$> readPrec
 
 instance (ToJSON a) => ToJSON (EnumMap k a) where
     toJSON = toJSON . unWrap
@@ -204,6 +203,7 @@ instance (ToJSON a) => ToJSON (EnumMap k a) where
 
 instance (FromJSON a) => FromJSON (EnumMap k a) where
     parseJSON = fmap (EnumMap . I.fromList) . parseJSON
+
 --
 -- Conversion to/from 'IntMap'.
 --

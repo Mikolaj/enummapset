@@ -29,8 +29,10 @@ main = defaultMain [ testCase "lookupLT" test_lookupLT
                    , testCase "lookupLE" test_lookupLE
                    , testCase "lookupGE" test_lookupGE
                    , testCase "split" test_split
-                   , testCase "encode" test_encode
+                   , testCase "encode set" test_encode_set
+                   , testCase "encode map" test_encode_map
                    , testCase "decode" test_decode
+                   , testCase "decode" test_decode_map
                    , testProperty "prop_Valid" prop_Valid
                    , testProperty "prop_EmptyValid" prop_EmptyValid
                    , testProperty "prop_SingletonValid" prop_SingletonValid

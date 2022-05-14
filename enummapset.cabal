@@ -66,6 +66,9 @@ Test-suite intset-properties
   main-is: intset-properties.hs
   other-modules:
       Data.EnumSet
+      Data.EnumMap.Lazy
+      Data.EnumMap.Base
+      Data.EnumMap
       IntSetValidity
       Json
   type: exitcode-stdio-1.0
