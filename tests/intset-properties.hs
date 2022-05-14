@@ -31,8 +31,11 @@ main = defaultMain [ testCase "lookupLT" test_lookupLT
                    , testCase "split" test_split
                    , testCase "encode set" test_encode_set
                    , testCase "encode map" test_encode_map
-                   , testCase "decode" test_decode
-                   , testCase "decode" test_decode_map
+                   , testCase "decode set" test_decode_set
+                   , testCase "decode map" test_decode_map
+                   , testProperty "prop_json_trip_set" prop_json_trip_set
+                   , testProperty "prop_json_trip_map" prop_json_trip_map
+                   , testProperty "prop_json_trip_map2" prop_json_trip_map2
                    , testProperty "prop_Valid" prop_Valid
                    , testProperty "prop_EmptyValid" prop_EmptyValid
                    , testProperty "prop_SingletonValid" prop_SingletonValid

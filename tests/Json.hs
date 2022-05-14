@@ -14,6 +14,7 @@ import qualified Data.EnumSet as ES
 import qualified Data.EnumMap as EM
 import Test.HUnit ( Assertion, (@?=) )
 import GHC.Generics (Generic)
+import Test.QuickCheck ( Property, (===))
 
 data Creature = Cat | Dog | Fish | Wolf
   deriving stock (Eq, Show, Enum, Ord, Generic)
@@ -39,6 +40,13 @@ test_encode_set = do
     encode (ES.fromList creature) @?= "[0,1,2]"
     encode (ES.fromList creature2) @?= "[0,3]"
 
+test_decode_set :: Assertion
+test_decode_set = do
+    decode "[0,1,2]" @?=
+      (Just (ES.fromList creature) :: Maybe (EnumSet Creature))
+    decode "[0,3]" @?=
+      (Just (ES.fromList creature2) :: Maybe (EnumSet Creature))
+
 test_encode_map :: Assertion
 test_encode_map = do
     encode (EM.fromSet id $ ES.fromList creature)
@@ -48,13 +56,6 @@ test_encode_map = do
     encode (EM.fromList creatureMRev) @?= "[[0,\"C\"],[1,\"D\"]]"
     encode (EM.fromList creatureMDup) @?= "[[0,\"C\"],[1,\"DD\"]]"
 
-test_decode :: Assertion
-test_decode = do
-    decode "[0,1,2]" @?=
-      (Just (ES.fromList creature) :: Maybe (EnumSet Creature))
-    decode "[0,3]" @?=
-      (Just (ES.fromList creature2) :: Maybe (EnumSet Creature))
-
 test_decode_map :: Assertion
 test_decode_map = do
     decode "[[0,\"Cat\"],[1,\"Dog\"],[2,\"Fish\"]]" @?=
@@ -63,3 +64,18 @@ test_decode_map = do
       @?= Just [Cat,Dog,Fish]
     EM.toList <$> decode "[[0,\"C\"],[1,\"D\"]]" @?=
       (Just creatureM :: Maybe [(Creature, String)])
+
+prop_json_trip_set :: [Int] -> Property
+prop_json_trip_set is =
+  let setNums = ES.fromList is
+  in decode (encode setNums) === Just setNums
+
+prop_json_trip_map :: [Int] -> Property
+prop_json_trip_map is =
+  let mapNums = EM.fromSet show $ ES.fromList is
+  in decode (encode mapNums) === Just mapNums
+
+prop_json_trip_map2 :: [(Int,String)] -> Property
+prop_json_trip_map2 is =
+  let mapNums = EM.fromList is
+  in decode (encode mapNums) === Just mapNums
