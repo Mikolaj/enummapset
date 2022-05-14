@@ -9,7 +9,6 @@ bug-reports:    https://github.com/Mikolaj/enummapset/issues
 license:        BSD3
 license-file:   LICENSE
 tested-with:
-    GHC==8.2.2
   , GHC==8.4.4
   , GHC==8.6.5
   , GHC==8.8.3
@@ -45,7 +44,7 @@ Library
   build-depends:
     base >= 4.6 && < 5,
     aeson,
-    containers >= 0.5.11.0 && < 0.7,
+    containers >= 0.5.11 && < 0.7,
     semigroups >=0.1 && <1.0,
     deepseq
 
@@ -79,7 +78,7 @@ Test-suite intset-properties
                     KindSignatures, TypeFamilies, UndecidableInstances
 
   build-depends:
-      containers >= 0.5.11.0 && < 0.7,
+      containers >= 0.5.11 && < 0.7,
       semigroups >=0.1 && <1.0,
       HUnit,
       QuickCheck >= 2.7.1,
