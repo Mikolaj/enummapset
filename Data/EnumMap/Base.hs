@@ -124,10 +124,10 @@ module Data.EnumMap.Base
   -- * Filter
   , filter
   , filterWithKey
-
+#if (MIN_VERSION_containers(0,5,8))
   , restrictKeys
   , withoutKeys
-
+#endif
   , partition
   , partitionWithKey
 
