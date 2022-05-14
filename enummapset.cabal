@@ -67,6 +67,7 @@ Test-suite intset-properties
   other-modules:
       Data.EnumSet
       IntSetValidity
+      Json
   type: exitcode-stdio-1.0
   cpp-options: -DTESTING
 

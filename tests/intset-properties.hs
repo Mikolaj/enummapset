@@ -1,6 +1,10 @@
 -- Copied from https://github.com/haskell/containers and tweaked slithgly
 
 {-# LANGUAGE CPP #-}
+
+import qualified IntSetValidity as IntSetValidity (valid)
+import           Json
+
 import           Data.Bits (popCount, (.&.))
 import           Data.EnumSet
 import           Data.IntSet.Internal (IntSet (Bin))
@@ -9,7 +13,6 @@ import qualified Data.List as List
 import           Data.Monoid (mempty)
 import qualified Data.Set as Set
 import           Data.Word (Word)
-import qualified IntSetValidity as IntSetValidity (valid)
 import           Prelude hiding (filter, foldl, foldr, lookup, map, null)
 import           Test.Framework
 import           Test.Framework.Providers.HUnit
@@ -26,6 +29,8 @@ main = defaultMain [ testCase "lookupLT" test_lookupLT
                    , testCase "lookupLE" test_lookupLE
                    , testCase "lookupGE" test_lookupGE
                    , testCase "split" test_split
+                   , testCase "encode" test_encode
+                   , testCase "decode" test_decode
                    , testProperty "prop_Valid" prop_Valid
                    , testProperty "prop_EmptyValid" prop_EmptyValid
                    , testProperty "prop_SingletonValid" prop_SingletonValid
