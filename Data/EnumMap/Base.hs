@@ -180,7 +180,7 @@ import Data.Monoid ( Monoid )
 import Data.Semigroup ( Semigroup )
 import Data.Traversable ( Traversable )
 import Data.Typeable ( Typeable )
-import Data.Aeson ( FromJSON(..), ToJSON(..) )
+import Data.Aeson ( FromJSON(..), ToJSON(..), FromJSON1(..), FromJSON2(..) )
 import Text.Read
 
 -- | Wrapper for 'IntMap' with 'Enum' keys.
