@@ -1,5 +1,9 @@
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE DerivingStrategies #-}
 
 -- |
 -- Module      :  $Header$
@@ -105,12 +109,23 @@ import Control.DeepSeq ( NFData )
 import Data.Monoid ( Monoid )
 import Data.Semigroup ( Semigroup )
 import Data.Typeable ( Typeable )
-
+import Data.Aeson
+    ( FromJSON(parseJSON), ToJSON(toEncoding, toJSON) )
 import Text.Read
+import GHC.Generics (Generic)
 
 -- | Wrapper for 'IntSet' with 'Enum' elements.
 newtype EnumSet k = EnumSet { unWrap :: IntSet }
-  deriving (Eq, Semigroup, Monoid, Ord, Typeable, NFData)
+  deriving stock
+    ( Eq
+    , Ord
+    , Typeable
+    )
+  deriving newtype
+    ( Semigroup
+    , Monoid
+    , NFData
+    )
 
 instance (Enum k, Show k) => Show (EnumSet k) where
   showsPrec p ks = showParen (p > 10) $
@@ -119,8 +134,14 @@ instance (Enum k, Show k) => Show (EnumSet k) where
 instance (Enum k, Read k) => Read (EnumSet k) where
   readPrec = parens . prec 10 $ do
     Ident "fromList" <- lexP
-    list <- readPrec
-    return (fromList list)
+    fromList <$> readPrec
+
+instance ToJSON (EnumSet a) where
+    toJSON = toJSON . unWrap
+    toEncoding = toEncoding . unWrap
+
+instance (FromJSON a) => FromJSON (EnumSet a) where
+    parseJSON = fmap (EnumSet . I.fromList) . parseJSON
 
 --
 -- Conversion to/from 'IntSet'.

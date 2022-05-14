@@ -180,7 +180,7 @@ import Data.Monoid ( Monoid )
 import Data.Semigroup ( Semigroup )
 import Data.Traversable ( Traversable )
 import Data.Typeable ( Typeable )
-
+import Data.Aeson ( FromJSON(..), ToJSON(..) )
 import Text.Read
 
 -- | Wrapper for 'IntMap' with 'Enum' keys.
@@ -195,8 +195,14 @@ instance (Enum k, Show k, Show a) => Show (EnumMap k a) where
 instance (Enum k, Read k, Read a) => Read (EnumMap k a) where
   readPrec = parens . prec 10 $ do
     Ident "fromList" <- lexP
-    list <- readPrec
-    return (fromList list)
+    fromList <$> readPrec
+
+instance (ToJSON a) => ToJSON (EnumMap k a) where
+    toJSON = toJSON . unWrap
+    toEncoding = toEncoding . unWrap
+
+instance (FromJSON a) => FromJSON (EnumMap k a) where
+    parseJSON = fmap (EnumMap . I.fromList) . parseJSON
 
 --
 -- Conversion to/from 'IntMap'.
