@@ -47,7 +47,7 @@ Library
     aeson,
     containers >= 0.5.11 && < 0.7,
     semigroups >=0.1 && <1.0,
-    deepseq
+    deepseq >= 1.2 && < 1.5
 
   if flag(debug)
     ghc-options: -Wall
@@ -71,7 +71,6 @@ Test-suite intset-properties
   type: exitcode-stdio-1.0
   cpp-options: -DTESTING
 
-  build-depends: base >= 4.6 && < 5, aeson, array >= 0.4.0.0, deepseq >= 1.2 && < 1.5, ghc-prim
   ghc-options: -O2
   default-language: Haskell2010
   other-extensions: CPP, BangPatterns,
@@ -79,10 +78,16 @@ Test-suite intset-properties
                     KindSignatures, TypeFamilies, UndecidableInstances
 
   build-depends:
-      containers >= 0.5.11 && < 0.7,
-      semigroups >=0.1 && <1.0,
-      HUnit,
-      QuickCheck >= 2.7.1,
-      test-framework,
-      test-framework-hunit,
-      test-framework-quickcheck2
+    base,
+    aeson,
+    array >= 0.4.0.0,
+    containers,
+    deepseq,
+    ghc-prim,
+    semigroups,
+
+    HUnit,
+    QuickCheck >= 2.7.1,
+    test-framework,
+    test-framework-hunit,
+    test-framework-quickcheck2
