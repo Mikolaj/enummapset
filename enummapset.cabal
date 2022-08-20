@@ -46,8 +46,10 @@ Library
     base >= 4.6 && < 5,
     aeson,
     containers >= 0.5.11 && < 0.7,
-    semigroups >=0.1 && <1.0,
     deepseq >= 1.2 && < 1.5
+
+  if impl(ghc < 8.0)
+    build-depends: semigroups >=0.1 && <1.0
 
   if flag(debug)
     ghc-options: -Wall
@@ -84,10 +86,12 @@ Test-suite intset-properties
     containers,
     deepseq,
     ghc-prim,
-    semigroups,
 
     HUnit,
     QuickCheck >= 2.7.1,
     test-framework,
     test-framework-hunit,
     test-framework-quickcheck2
+  
+  if impl(ghc < 8.0)
+    build-depends: semigroups
