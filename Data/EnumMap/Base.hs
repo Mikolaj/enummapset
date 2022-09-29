@@ -54,6 +54,7 @@ module Data.EnumMap.Base
   , updateWithKey
   , updateLookupWithKey
   , alter
+  , alterF
 
   -- * Combine
 
@@ -326,6 +327,10 @@ updateLookupWithKey f k =
 alter :: (Enum k) => (Maybe a -> Maybe a) -> k -> EnumMap k a -> EnumMap k a
 alter f k = EnumMap . I.alter f (fromEnum k) . unWrap
 {-# INLINE alter #-}
+
+alterF :: (Enum k, Functor f) => (Maybe a -> f (Maybe a)) -> k -> EnumMap k a -> f (EnumMap k a)
+alterF f k = fmap EnumMap . I.alterF f (fromEnum k) . unWrap
+{-# INLINE alterF #-}
 
 unions :: [EnumMap k a] -> EnumMap k a
 unions = EnumMap . I.unions . P.map unWrap

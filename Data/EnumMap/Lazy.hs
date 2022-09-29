@@ -54,6 +54,7 @@ module Data.EnumMap.Lazy
   , updateWithKey
   , updateLookupWithKey
   , alter
+  , alterF
 
   -- * Combine
 
