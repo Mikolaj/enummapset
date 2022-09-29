@@ -54,6 +54,7 @@ module Data.EnumMap.Strict
   , updateWithKey
   , updateLookupWithKey
   , alter
+  , alterF
 
   -- * Combine
 
@@ -172,7 +173,7 @@ import qualified Data.IntMap.Strict as I
 import           Data.EnumSet (EnumSet)
 import qualified Data.EnumSet as EnumSet
 
-import Data.EnumMap.Base hiding (adjust, adjustWithKey, alter, differenceWith,
+import Data.EnumMap.Base hiding (adjust, adjustWithKey, alter, alterF, differenceWith,
                           differenceWithKey, findWithDefault, fromAscList,
                           fromAscListWith, fromAscListWithKey,
                           fromDistinctAscList, fromList, fromListWith,
@@ -225,6 +226,10 @@ adjustWithKey f k = EnumMap . I.adjustWithKey (f . toEnum) (fromEnum k) . unWrap
 alter :: (Enum k) => (Maybe a -> Maybe a) -> k -> EnumMap k a -> EnumMap k a
 alter f k = EnumMap . I.alter f (fromEnum k) . unWrap
 {-# INLINE alter #-}
+
+alterF :: (Enum k, Functor f) => (Maybe a -> f (Maybe a)) -> k -> EnumMap k a -> f (EnumMap k a)
+alterF f k = fmap EnumMap . I.alterF f (fromEnum k) . unWrap
+{-# INLINE alterF #-}
 
 unionsWith :: (a -> a -> a) -> [EnumMap k a] -> EnumMap k a
 unionsWith f = EnumMap . I.unionsWith f . P.map unWrap
