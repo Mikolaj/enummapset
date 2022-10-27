@@ -147,6 +147,8 @@ module Data.EnumMap.Base
   , isProperSubmapOfBy
 
   -- * Min\/Max
+  , lookupMin
+  , lookupMax
   , findMin
   , findMax
   , deleteMin
@@ -442,6 +444,14 @@ deleteFindMax = (first toEnum *** EnumMap) . I.deleteFindMax . unWrap
 deleteFindMin :: (Enum k) => EnumMap k a -> ((k, a), EnumMap k a)
 deleteFindMin = (first toEnum *** EnumMap) . I.deleteFindMin . unWrap
 {-# INLINE deleteFindMin #-}
+
+lookupMin :: (Enum k) => EnumMap k a -> Maybe (k, a)
+lookupMin = fmap (first toEnum) . I.lookupMin . unWrap
+{-# INLINE lookupMin #-}
+
+lookupMax :: (Enum k) => EnumMap k a -> Maybe (k, a)
+lookupMax = fmap (first toEnum) . I.lookupMax . unWrap
+{-# INLINE lookupMax #-}
 
 findMin :: (Enum k) => EnumMap k a -> (k, a)
 findMin = first toEnum . I.findMin . unWrap

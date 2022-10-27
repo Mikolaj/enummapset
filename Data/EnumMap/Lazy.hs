@@ -147,6 +147,8 @@ module Data.EnumMap.Lazy
   , isProperSubmapOfBy
 
   -- * Min\/Max
+  , lookupMin
+  , lookupMax
   , findMin
   , findMax
   , deleteMin

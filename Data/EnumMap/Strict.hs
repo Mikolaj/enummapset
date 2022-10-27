@@ -147,6 +147,8 @@ module Data.EnumMap.Strict
   , isProperSubmapOfBy
 
   -- * Min\/Max
+  , lookupMin
+  , lookupMax
   , findMin
   , findMax
   , deleteMin
