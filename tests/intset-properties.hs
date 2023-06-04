@@ -13,7 +13,7 @@ import qualified Data.List as List
 import           Data.Monoid (mempty)
 import qualified Data.Set as Set
 import           Data.Word (Word)
-import           Prelude hiding (filter, foldl, foldr, lookup, map, null)
+import           Prelude hiding (Foldable(..), filter, lookup, map)
 import           Test.Framework
 import           Test.Framework.Providers.HUnit
 import           Test.Framework.Providers.QuickCheck2
@@ -167,7 +167,7 @@ prop_Single x
 prop_Member :: [Int] -> Int -> Bool
 prop_Member xs n =
   let m  = fromList xs
-  in all (\k -> k `member` m == (k `elem` xs)) (n : xs)
+  in all (\k -> k `member` m == (k `List.elem` xs)) (n : xs)
 
 prop_NotMember :: [Int] -> Int -> Bool
 prop_NotMember xs n =
@@ -334,10 +334,10 @@ prop_size s = sz === foldl' (\i _ -> i + 1) (0 :: Int) s .&&.
   where sz = size s
 
 prop_findMax :: EnumSet Int -> Property
-prop_findMax s = not (null s) ==> findMax s == maximum (toList s)
+prop_findMax s = not (null s) ==> findMax s == List.maximum (toList s)
 
 prop_findMin :: EnumSet Int -> Property
-prop_findMin s = not (null s) ==> findMin s == minimum (toList s)
+prop_findMin s = not (null s) ==> findMin s == List.minimum (toList s)
 
 prop_ord :: EnumSet Int -> EnumSet Int -> Bool
 prop_ord s1 s2 = s1 `compare` s2 == toList s1 `compare` toList s2
@@ -363,12 +363,12 @@ prop_map s = map id s == s
 prop_maxView :: EnumSet Int -> Bool
 prop_maxView s = case maxView s of
     Nothing -> null s
-    Just (m,s') -> m == maximum (toList s) && s == insert m s' && m `notMember` s'
+    Just (m,s') -> m == List.maximum (toList s) && s == insert m s' && m `notMember` s'
 
 prop_minView :: EnumSet Int -> Bool
 prop_minView s = case minView s of
     Nothing -> null s
-    Just (m,s') -> m == minimum (toList s) && s == insert m s' && m `notMember` s'
+    Just (m,s') -> m == List.minimum (toList s) && s == insert m s' && m `notMember` s'
 
 prop_split :: EnumSet Int -> Int -> Property
 prop_split s i = case split i s of

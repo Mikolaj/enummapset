@@ -165,7 +165,7 @@ module Data.EnumMap.Strict
   , maxViewWithKey
   ) where
 
-import           Prelude hiding (filter, foldl, foldr, lookup, map, null)
+import           Prelude hiding (Foldable(..), filter, lookup, map)
 import qualified Prelude as P
 
 import Control.Arrow (first, second, (***))

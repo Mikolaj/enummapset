@@ -165,6 +165,6 @@ module Data.EnumMap.Lazy
   , maxViewWithKey
   ) where
 
-import Prelude hiding (filter, foldl, foldr, lookup, map, null)
+import Prelude hiding (Foldable(..), filter, lookup, map)
 
 import Data.EnumMap.Base
