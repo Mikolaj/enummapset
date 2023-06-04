@@ -165,7 +165,7 @@ module Data.EnumMap.Base
   , maxViewWithKey
   ) where
 
-import Prelude hiding ( filter, foldr, foldl, lookup, map, null )
+import Prelude hiding ( Foldable(..), filter, lookup, map )
 import qualified Prelude as P
 
 import Control.Applicative ( Applicative, liftA )
