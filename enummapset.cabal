@@ -14,7 +14,10 @@ tested-with:
   , GHC==8.8.4
   , GHC==8.10.7
   , GHC==9.0.2
-  , GHC==9.2.2
+  , GHC==9.2.8
+  , GHC==9.4.8
+  , GHC==9.6.3
+  , GHC==9.8.1
 author:         Michal Terepeta and others
 maintainer:     Mikolaj Konarski <mikolaj.konarski@funktory.com>
 category:       Data Structures
@@ -92,6 +95,6 @@ Test-suite intset-properties
     test-framework,
     test-framework-hunit,
     test-framework-quickcheck2
-  
+
   if impl(ghc < 8.0)
     build-depends: semigroups
