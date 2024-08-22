@@ -4,6 +4,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE TypeFamilies #-}
 
 -- |
 -- Module      :  $Header$
@@ -113,6 +114,7 @@ import Data.Aeson
     ( FromJSON(parseJSON), ToJSON(toEncoding, toJSON) )
 import Text.Read
 import GHC.Generics (Generic)
+import qualified GHC.Exts as IL
 
 -- | Wrapper for 'IntSet' with 'Enum' elements.
 newtype EnumSet k = EnumSet { unWrap :: IntSet }
@@ -142,6 +144,15 @@ instance ToJSON (EnumSet a) where
 
 instance (FromJSON a) => FromJSON (EnumSet a) where
     parseJSON = fmap (EnumSet . I.fromList) . parseJSON
+
+instance (Enum a) => IL.IsList (EnumSet a) where
+  type Item (EnumSet a) = a
+
+  toList = P.map toEnum . I.toList . unWrap
+  {-# INLINE toList #-}
+
+  fromList = EnumSet . I.fromList . P.map fromEnum
+  {-# INLINE fromList #-}
 
 --
 -- Conversion to/from 'IntSet'.
@@ -316,7 +327,7 @@ elems = P.map toEnum . I.elems . unWrap
 {-# INLINE elems #-}
 
 toList :: (Enum k) => EnumSet k -> [k]
-toList = P.map toEnum . I.toList . unWrap
+toList = IL.toList
 {-# INLINE toList #-}
 
 toAscList :: (Enum k) => EnumSet k -> [k]
@@ -328,7 +339,7 @@ toDescList = P.map toEnum . I.toDescList . unWrap
 {-# INLINE toDescList #-}
 
 fromList :: (Enum k) => [k] -> EnumSet k
-fromList = EnumSet . I.fromList . P.map fromEnum
+fromList = IL.fromList
 {-# INLINE fromList #-}
 
 fromAscList :: (Enum k) => [k] -> EnumSet k

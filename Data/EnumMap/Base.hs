@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DeriveTraversable          #-}
+{-# LANGUAGE TypeFamilies               #-}
 
 -- |
 -- Module      :  $Header$
@@ -184,6 +185,7 @@ import Data.Semigroup ( Semigroup )
 import Data.Traversable ( Traversable )
 import Data.Typeable ( Typeable )
 import Data.Aeson ( FromJSON(..), ToJSON(..) )
+import qualified GHC.Exts as IL
 import Text.Read
 
 -- | Wrapper for 'IntMap' with 'Enum' keys.
@@ -206,6 +208,16 @@ instance (ToJSON a) => ToJSON (EnumMap k a) where
 
 instance (FromJSON a) => FromJSON (EnumMap k a) where
     parseJSON = fmap (EnumMap . I.fromList) . parseJSON
+
+instance (Enum k) => IL.IsList (EnumMap k a) where
+  type Item (EnumMap k a) = (k, a)
+
+  toList = P.map (first toEnum) . I.toList . unWrap
+  {-# INLINE toList #-}
+
+  fromList = EnumMap . I.fromList . P.map (first fromEnum)
+  {-# INLINE fromList #-}
+
 
 --
 -- Conversion to/from 'IntMap'.
@@ -637,7 +649,7 @@ assocs = P.map (first toEnum) . I.assocs . unWrap
 {-# INLINE assocs #-}
 
 toList :: (Enum k) => EnumMap k a -> [(k, a)]
-toList = P.map (first toEnum) . I.toList . unWrap
+toList = IL.toList
 {-# INLINE toList #-}
 
 toAscList :: (Enum k) => EnumMap k a -> [(k, a)]
@@ -649,7 +661,7 @@ toDescList = P.map (first toEnum) . I.toDescList . unWrap
 {-# INLINE toDescList #-}
 
 fromList :: (Enum k) => [(k, a)] -> EnumMap k a
-fromList = EnumMap . I.fromList . P.map (first fromEnum)
+fromList = IL.fromList
 {-# INLINE fromList #-}
 
 fromListWith :: (Enum k) => (a -> a -> a) -> [(k, a)] -> EnumMap k a
