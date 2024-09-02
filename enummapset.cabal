@@ -16,8 +16,8 @@ tested-with:
   , GHC==9.0.2
   , GHC==9.2.8
   , GHC==9.4.8
-  , GHC==9.6.3
-  , GHC==9.8.1
+  , GHC==9.6.6
+  , GHC==9.8.2
 author:         Michal Terepeta and others
 maintainer:     Mikolaj Konarski <mikolaj.konarski@funktory.com>
 category:       Data Structures
@@ -83,7 +83,7 @@ Test-suite intset-properties
                     KindSignatures, TypeFamilies, UndecidableInstances
 
   build-depends:
-    base,
+    base >= 4.6 && < 5,
     aeson,
     array >= 0.4.0.0,
     containers,
