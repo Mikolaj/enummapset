@@ -55,7 +55,7 @@ Library
     deepseq >= 1.2 && < 1.7
 
   if impl(ghc < 8.0)
-    build-depends: semigroups >=0.1 && <1.0
+    build-depends: semigroups >=0.1 && <1
 
   if flag(debug)
     ghc-options: -Wall
